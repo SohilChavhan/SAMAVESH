@@ -1,0 +1,46 @@
+PROJECT: KOZHA - SPEECH-TO-SIGN LANGUAGE TRANSLATION PLATFORM (Gujarat-Localised Edition)
+
+=========================================
+PART 1: THE TECHNICAL SOLUTION
+=========================================
+Kozha departs from traditional, rigid video-lookup translation methods by employing a dynamic, generative, and linguistics-first architecture. The technical solution is built on a multi-stage pipeline designed for real-time performance and scalability.
+
+1. Grammatical NLP & Syntax Engine
+Sign languages possess unique syntactic rules that differ vastly from spoken languages (e.g., Object-Subject-Verb instead of Subject-Verb-Object). 
+- Dependency Parsing: The backend utilizes 'spaCy' to parse sentences, identify parts of speech, and logically reorder words into sign-compatible syntax before translation.
+- Rule-Based Grammar Profiles: The system applies specific boolean rules tailored to over 15 sign languages (e.g., forcing time-related concepts to the start of a sentence).
+- Token Normalization: Extensive dictionaries normalize pronouns and strip out non-essential stop words to ensure the core meaning is preserved without grammatical clutter.
+
+2. Generative Avatar Pipeline (HamNoSys -> SiGML -> WebGL)
+Instead of serving heavy video files, Kozha generates mathematical text instructions for a 3D model.
+- HamNoSys (Hamburg Notation System): Translated words are converted into Unicode phonetic symbols representing hand shapes, spatial locations, and movements.
+- SiGML XML Serialization: The HamNoSys strings are wrapped into Signing Gesture Markup Language (SiGML).
+- CWASA WebGL Rendering: The client-side browser receives the SiGML file. A JavaScript engine parses the XML and calculates inverse kinematics to drive a 3D avatar's joints dynamically. This reduces bandwidth requirements from megabytes to kilobytes.
+
+3. Omnipresent Client Deployment Strategy
+The translation engine is completely decoupled from the UI:
+- Web Platform: A standalone web application for direct translation.
+- Chrome Extension: Injects translation directly into the browser. It can summon a floating 3D avatar for highlighted text, or dynamically extract YouTube closed captions, chunk them into translation windows, and sync the avatar’s gesture playback to the video timeline.
+
+4. LLM-Powered Crowdsourcing (Chat2HamNoSys)
+To scale the sign dictionary, Kozha uses a dedicated AI-assisted crowdsourcing subsystem. Contributors describe a sign in natural language, and an integrated LLM generates the complex HamNoSys unicode characters. This is paired with a strict metadata review system to ensure quality control before signs are deployed publicly.
+
+5. Gujarat Localisation Layer (G-ISL)
+Kozha's Gujarat edition is built on an ISL (Indian Sign Language) backbone of 763 verified signs, augmented with 34 Gujarati consonant handshapes derived from a local dataset. The entire UI supports Gujarati script input/output, and the architecture is designed as a plug-in system where GJSL-specific signs can be contributed by local Deaf community members and NGOs via the Chat2HamNoSys pipeline. This "ISL-first, Gujarat-localised, GJSL-ready" approach provides immediate utility today while creating a clear community-driven roadmap for full GJSL coverage.
+
+=========================================
+PART 2: THE SOCIAL SOLUTION
+=========================================
+Beyond its technical achievements, Kozha is fundamentally designed to dismantle societal communication barriers and promote systemic equity for the Deaf and Hard of Hearing (DHH) community.
+
+1. Unrestricted Educational Equity
+The digital age has left many DHH students behind due to a lack of sign language resources. By integrating directly into web browsers and YouTube, Kozha provides DHH students with independent, real-time access to online lectures, tutorials, and articles in their native linguistic format, dramatically improving literacy and academic comprehension.
+
+2. Bridging the Family Communication Gap
+Over 90% of deaf children are born to hearing parents. Kozha provides an immediate, accessible tool for parents to translate bedtime stories, homework instructions, or daily conversations. This reduces the emotional stress of the steep sign-language learning curve and fosters stronger family bonding from an early age.
+
+3. Cultural Preservation and Community Empowerment
+Many regional sign languages are historically under-documented and marginalised. In Gujarat, where Deaf signers use a mix of ISL and local gestural conventions, there is no widely available digital dictionary. Kozha addresses this by providing an ISL backbone that is immediately useful, while the crowdsourced 'Chat2HamNoSys' platform creates a pipeline for local Deaf communities and NGOs to document and contribute GJSL (Gujarati Sign Language) signs over time — giving agency back to the community to preserve and digitise their linguistic heritage.
+
+4. Normalization and Workplace Inclusivity
+By making the internet natively bilingual (text and visual sign), Kozha normalizes the presence of sign language in everyday digital spaces. It removes the "communication friction" in workplaces, allowing colleagues to easily translate emails or messages, which ultimately opens wider employment opportunities and breaks down stigmas surrounding the DHH community.

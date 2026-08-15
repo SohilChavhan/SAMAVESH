@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SAMAVESH - Learn with Signs</title>
+  <meta name="description" content="A fun, safe place for kids to learn Maths, Language, and Science using sign language.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,800;9..40,900&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/styles/lms.css">
+  <script defer src="/luna-translator.js"></script>
+  <script defer src="/lms.js"></script>
+</head>
+<body>
+
+  <!-- Header & Navigation -->
+  <header class="sl-header">
+    <nav class="sl-nav">
+      <a href="/" class="sl-logo">
+        <div class="sl-logo-icon">🤟</div>
+        SAMAVESH
+      </a>
+      
+      <!-- Login Buttons -->
+      <ul class="sl-nav-links">
+        <li class="sl-nav-item"><a href="#" class="sl-login-trigger" data-role="student">Student Login</a></li>
+        <li class="sl-nav-item"><a href="#" class="sl-login-trigger" data-role="teacher">Teacher Login</a></li>
+        <li class="sl-nav-item"><a href="#" class="sl-btn sl-btn-primary sl-login-trigger" data-role="parent">Parent Portal</a></li>
+      </ul>
+
+      <!-- User Profile Badge (Hidden by default, shown when logged in) -->
+      <div class="sl-user-profile-badge" id="slProfileBadge" style="display:none;" title="Click to Logout">
+        <div class="sl-avatar-circle" id="profileAvatar">U</div>
+        <span style="font-weight:700; color:var(--text-main)" id="profileName">User</span>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Main Application Container -->
+  <main>
+    
+    <!-- LANDING PAGE VIEW -->
+    <div id="slLandingView">
+      
+      <!-- Hero Section -->
+      <section class="sl-hero">
+        <div class="sl-hero-container">
+          <div class="sl-badge-pill">✨ Made for Elementary Students</div>
+          <h1>Learn Maths, Language & Science<br>with Sign Language!</h1>
+          <p>Watch videos, take quizzes, and track your progress – made just for kids.</p>
+          
+          <div class="sl-hero-ctas">
+            <button class="sl-btn sl-btn-primary sl-login-trigger" data-role="student" style="font-size:1.1rem; padding: 1rem 2rem;">
+              🎒 I'm a Student - Sign In
+            </button>
+            <button class="sl-btn sl-btn-outline sl-login-trigger" data-role="teacher" style="font-size:1.1rem; padding: 1rem 2rem; background: #FFFFFF;">
+              🍎 I'm a Teacher - Sign In
+            </button>
+          </div>
+
+          <!-- Mascot Banner Visual -->
+          <div class="sl-hero-mascot-card">
+            <div class="sl-mascot-avatar">🦉</div>
+            <div class="sl-mascot-speech">
+              <h4>Hi, I'm Kozhi the Owl!</h4>
+              <p>I'll help you learn sign language while you study fun subjects. Are you ready?</p>
+              <div class="sl-sign-pills">
+                <span class="sl-sign-pill">👋 "Hello"</span>
+                <span class="sl-sign-pill">🧠 "Learn"</span>
+                <span class="sl-sign-pill">🔢 "Math"</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- How It Works Section -->
+      <section class="sl-section">
+        <div class="sl-section-title">
+          <h2>How It Works</h2>
+          <p>Start learning in 3 simple steps.</p>
+        </div>
+        <div class="sl-grid-3">
+          <div class="sl-step-card">
+            <div class="sl-step-icon sl-icon-blue">🪪</div>
+            <h3>1. Sign In with Your ID</h3>
+            <p>Use your school ID like <strong>STU_01_122</strong> or <strong>PRO1233</strong>.</p>
+          </div>
+          <div class="sl-step-card">
+            <div class="sl-step-icon sl-icon-yellow">▶️</div>
+            <h3>2. Watch & Learn</h3>
+            <p>Choose Maths, Language, or Science and watch short videos.</p>
+          </div>
+          <div class="sl-step-card">
+            <div class="sl-step-icon sl-icon-green">🏆</div>
+            <h3>3. Take Quizzes & Grow</h3>
+            <p>Finish each chapter with a quiz and see your progress in your profile.</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Subjects Preview -->
+      <section class="sl-section" style="background:#F8FAFC; border-radius:var(--radius-lg);">
+        <div class="sl-section-title">
+          <h2>What You'll Learn</h2>
+        </div>
+        <div class="sl-grid-3">
+          <!-- Maths -->
+          <div class="sl-subject-card maths">
+            <div class="sl-subject-header">
+              <div class="sl-subject-badge-icon" style="background:#FFF9EC; color:#FF9F1C;">🔢</div>
+              <h3>Maths</h3>
+            </div>
+            <p>Numbers, shapes, and fun problems to solve every day.</p>
+            <button class="sl-btn sl-btn-orange sl-login-trigger" data-role="student">Explore Maths</button>
+          </div>
+          <!-- Language -->
+          <div class="sl-subject-card language">
+            <div class="sl-subject-header">
+              <div class="sl-subject-badge-icon" style="background:#ECFDF5; color:#06D6A0;">📚</div>
+              <h3>Language</h3>
+            </div>
+            <p>Words, sentences, and fun stories in sign language.</p>
+            <button class="sl-btn sl-btn-secondary sl-login-trigger" data-role="student">Explore Language</button>
+          </div>
+          <!-- Science -->
+          <div class="sl-subject-card science">
+            <div class="sl-subject-header">
+              <div class="sl-subject-badge-icon" style="background:#EFF6FF; color:#4A90E2;">🔬</div>
+              <h3>Science</h3>
+            </div>
+            <p>Plants, animals, and discovering how things work.</p>
+            <button class="sl-btn sl-btn-primary sl-login-trigger" data-role="student">Explore Science</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sign Language Focus Section -->
+      <section class="sl-section">
+        <div class="sl-lang-focus-box">
+          <h2 style="font-size:2.4rem; font-weight:900; margin-bottom:1rem;">Learn in Your Sign Language</h2>
+          <p style="font-size:1.2rem; color:#CBD5E1; max-width:600px; margin:0 auto;">Our lessons use sign language so every child can learn easily and playfully!</p>
+          
+          <div class="sl-lang-pills-row">
+            <div class="sl-lang-chip">🇺🇸 ASL</div>
+            <div class="sl-lang-chip">🇮🇳 ISL</div>
+            <div class="sl-lang-chip">🇮🇳 G-ISL</div>
+            <div class="sl-lang-chip">🇬🇧 BSL</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- For Parents & Teachers Section -->
+      <section class="sl-section">
+        <div class="sl-parents-section">
+          <div class="sl-parents-grid">
+            <div>
+              <h2 style="font-size:2rem; font-weight:800; margin-bottom:1rem;">For Parents & Teachers</h2>
+              <p style="font-size:1.1rem; color:var(--text-muted);">SAMAVESH is built to provide a secure and supervised environment for students.</p>
+              
+              <ul class="sl-check-list">
+                <li><div class="sl-check-icon">✓</div> Safe, kid-friendly design.</li>
+                <li><div class="sl-check-icon">✓</div> Track progress with simple reports.</li>
+                <li><div class="sl-check-icon">✓</div> Easy login with school registration numbers.</li>
+              </ul>
+              
+              <button class="sl-btn sl-btn-primary" style="margin-top:1rem;">Request Access / Contact Us</button>
+            </div>
+            <div style="text-align:center;">
+              <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=600" alt="Teacher and students" style="width:100%; border-radius:var(--radius-lg); box-shadow:var(--shadow-md);">
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Footer -->
+      <footer class="sl-footer">
+        <div class="sl-footer-links">
+          <a href="#">About</a>
+          <a href="#">Privacy Policy</a>
+          <a href="#">Contact Support</a>
+        </div>
+        <p>Made with ❤️ for elementary students learning with sign language.</p>
+      </footer>
+    </div>
+    
+    <!-- DASHBOARD VIEW (Rendered dynamically via JS) -->
+    <div id="slDashboardView" style="display:none; padding-bottom:4rem;">
+      <!-- Content populated by lms.js -->
+    </div>
+
+    <!-- VIDEO PLAYER VIEW -->
+    <div id="slVideoPlayerView" style="display:none; padding-bottom:4rem;">
+      <div class="sl-dashboard-container">
+        <div class="sl-dash-topbar" style="margin-bottom: 2rem;">
+          <div class="sl-dash-welcome">
+            <button class="sl-btn sl-btn-outline" onclick="slCloseVideo()" style="padding: 0.5rem 1rem;">← Back</button>
+          </div>
+          <h2 style="font-size:2rem; font-weight:900;">Student Dashboard</h2>
+          <div style="width: 80px;"></div>
+        </div>
+        
+        <div class="sl-video-split-layout">
+          <!-- Left Side: Kozha Avatar -->
+          <div class="sl-avatar-pane">
+            <h3 style="margin-bottom:1rem;">Sign Language Translation</h3>
+            <div class="sl-avatar-wrapper">
+              <div class="CWASAAvatar av0"></div>
+            </div>
+            <div class="sl-captions-box" id="slCaptions">
+              Loading captions...
+            </div>
+          </div>
+          
+          <!-- Right Side: Video -->
+          <div class="sl-video-pane">
+            <h3 style="margin-bottom:1rem;">Educational Video</h3>
+            <div id="slVideoContainer" class="sl-video-placeholder">
+              <div style="font-size: 4rem; margin-bottom: 1rem;">▶️</div>
+              <h3>[Educational Video Player]</h3>
+              <p style="color:var(--text-muted)">The video lesson plays here.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Authentication Modal -->
+  <div class="sl-modal-overlay" id="slAuthModal" style="display:none;">
+    <div class="sl-auth-card">
+      <button class="sl-modal-close" id="closeAuthModal">✕</button>
+      
+      <div class="sl-auth-header">
+        <h2 style="font-size:1.8rem; font-weight:900; color:var(--text-main);">Welcome Back!</h2>
+        <p style="color:var(--text-muted); margin-top:0.5rem;">Sign in to continue learning.</p>
+      </div>
+
+      <div class="sl-auth-tabs">
+        <button class="sl-auth-tab active" data-tab="student">Student</button>
+        <button class="sl-auth-tab" data-tab="teacher">Teacher</button>
+        <button class="sl-auth-tab" data-tab="parent">Parent</button>
+      </div>
+
+      <form id="slAuthForm">
+        <input type="hidden" id="authRole" value="student">
+        
+        <div class="sl-auth-error" id="slAuthError"></div>
+
+        <div class="sl-form-group">
+          <label id="authInputLabel" for="authRegNumber">Student ID</label>
+          <input type="text" id="authRegNumber" class="sl-form-input" placeholder="e.g. STU_01_122" required>
+          <div class="sl-form-hint" id="authInputHint">Format: STU_&lt;year&gt;_&lt;roll&gt;</div>
+        </div>
+
+        <div class="sl-form-group" style="display:flex; align-items:center; gap:0.5rem; margin-bottom:2rem; margin-top:1rem;">
+          <input type="checkbox" id="authRemember" checked style="width:18px; height:18px; accent-color:var(--primary);">
+          <label for="authRemember" style="margin:0; font-weight:600; cursor:pointer;">Remember me</label>
+        </div>
+
+        <button type="submit" class="sl-btn sl-btn-primary" style="width:100%; justify-content:center; font-size:1.1rem; padding:1rem;">Sign In</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Permanent pool for WebGL Avatar slots to prevent destruction on DOM re-renders -->
+  <div id="sl-avatar-pool" style="position:absolute; visibility:hidden; z-index:-9999; pointer-events:none; left:-9999px;">
+    <div id="cwa-av1-container" class="CWASAAvatar av1" style="width:100%; height:100%;"></div>
+    <div id="cwa-av1-gui" class="CWASAGUI av1" style="display:none" aria-hidden="true"></div>
+  </div>
+
+  <script>
+    // Load CWASA Avatar Engine
+    (function () {
+      var s = document.createElement('script');
+      s.src = '/cwa/allcsa.js';
+      s.crossOrigin = 'anonymous';
+      s.referrerPolicy = 'no-referrer';
+      s.async = true;
+      s.onload = function () {
+        if (!window.CWASA) return;
+        // Init with two avatar slots:
+        // av0 = video player view (existing)
+        // av1 = Luna translator widget in dashboards
+        CWASA.init({
+          useClientConfig: false,
+          useCwaConfig: true,
+          avSettings: [
+            {
+              width: 1024, height: 768,
+              avList: 'avsfull', initAv: 'luna',
+              ambIdle: true, allowFrameSteps: false, allowSiGMLText: false
+            },
+            {
+              width: 1024, height: 768,
+              avList: 'avsfull', initAv: 'luna',
+              ambIdle: true, allowFrameSteps: false, allowSiGMLText: false
+            }
+          ]
+        });
+      };
+      document.head.appendChild(s);
+    })();
+  </script>
+</body>
+</html>

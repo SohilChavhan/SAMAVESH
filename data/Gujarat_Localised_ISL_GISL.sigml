@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Gujarat-Localised ISL (G-ISL) — Gujarati Consonant Signs
+  Source: Community-generated from GSL Consonants photo dataset
+  Backbone: Indian Sign Language (ISL) — see Indian_SL.sigml for word-level signs
+  Status: Seed dataset — 34 Gujarati consonant handshapes
+  TODO: Replace/augment with verified GJSL signs when available
+        from Deaf community / NGO partners in Gujarat
+  License: Educational use — pending Deaf community review
+-->
+<sigml>
+  <hns_sign gloss="ક">
+    <hamnosys_manual>
+      <hamfinger23/>
+      <hamextfingeru/>
+      <hampalmr/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ખ">
+    <hamnosys_manual>
+      <hamfinger2345/>
+      <hamfingerbendmod/>
+      <hamextfingerd/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ગ">
+    <hamnosys_manual>
+      <hamfinger2/>
+      <hamthumbopenmod/>
+      <hamextfingeru/>
+      <hampalml/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ઘ">
+    <hamnosys_manual>
+      <hampinchall/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ઙ">
+    <hamnosys_manual>
+      <hamfinger23/>
+      <hamextfingeri/>
+      <hampalml/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ચ">
+    <hamnosys_manual>
+      <hamfinger2345/>
+      <hamfingerbendmod/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="છ">
+    <hamnosys_manual>
+      <hamflathand/>
+      <hamextfingeru/>
+      <hampalml/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="જ">
+    <hamnosys_manual>
+      <hamfinger2345/>
+      <hamfingerbendmod/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ઝ">
+    <hamnosys_manual>
+      <hamceeall/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ઞ">
+    <hamnosys_manual>
+      <hamfist/>
+      <hamextfingeru/>
+      <hampalml/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ટ">
+    <hamnosys_manual>
+      <hamfinger2/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ઠ">
+    <hamnosys_manual>
+      <hamflathand/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ડ">
+    <hamnosys_manual>
+      <hamflathand/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ઢ">
+    <hamnosys_manual>
+      <hamfist/>
+      <hamextfingeru/>
+      <hampalmr/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ણ">
+    <hamnosys_manual>
+      <hamfist/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ત">
+    <hamnosys_manual>
+      <hamflathand/>
+      <hamextfingeru/>
+      <hampalml/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="થ">
+    <hamnosys_manual>
+      <hamflathand/>
+      <hamextfingero/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="દ">
+    <hamnosys_manual>
+      <hamflathand/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ધ">
+    <hamnosys_manual>
+      <hamfinger23/>
+      <hamextfingerd/>
+      <hampalml/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ન">
+    <hamnosys_manual>
+      <hamflathand/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="પ">
+    <hamnosys_manual>
+      <hamflathand/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ફ">
+    <hamnosys_manual>
+      <hamflathand/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="બ">
+    <hamnosys_manual>
+      <hamfinger2345/>
+      <hamfingerbendmod/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ભ">
+    <hamnosys_manual>
+      <hamflathand/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="મ">
+    <hamnosys_manual>
+      <hamflathand/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ય">
+    <hamnosys_manual>
+      <hamfist/>
+      <hamextfingeru/>
+      <hampalml/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ર">
+    <hamnosys_manual>
+      <hampinchall/>
+      <hamfingerstraightmod/>
+      <hamextfingeru/>
+      <hampalmr/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="લ">
+    <hamnosys_manual>
+      <hamfist/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ળ">
+    <hamnosys_manual>
+      <hampinchall/>
+      <hamextfingeru/>
+      <hampalmu/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="વ">
+    <hamnosys_manual>
+      <hamflathand/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="શ">
+    <hamnosys_manual>
+      <hamfinger2/>
+      <hamthumbopenmod/>
+      <hamextfingerl/>
+      <hampalmd/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ષ">
+    <hamnosys_manual>
+      <hamflathand/>
+      <hamextfingeru/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="સ">
+    <hamnosys_manual>
+      <hamfinger23/>
+      <hamextfingeru/>
+      <hampalmu/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="હ">
+    <hamnosys_manual>
+      <hamflathand/>
+      <hamextfingeru/>
+      <hampalmu/>
+    </hamnosys_manual>
+  </hns_sign>
+</sigml>

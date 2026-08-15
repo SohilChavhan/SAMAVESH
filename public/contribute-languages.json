@@ -1,0 +1,40 @@
+{
+  "languages": [
+    {
+      "code": "asl",
+      "name": "American Sign Language",
+      "english_name": "American Sign Language",
+      "group": "primary",
+      "has_reviewers": true,
+      "coverage_count": 1200,
+      "description_placeholder": "e.g. dominant hand in a flat 'B' shape, palm facing down, sweeps across chest."
+    },
+    {
+      "code": "isl",
+      "name": "Indian Sign Language",
+      "english_name": "Indian Sign Language",
+      "group": "primary",
+      "has_reviewers": true,
+      "coverage_count": 950,
+      "description_placeholder": "e.g. both hands open with palms facing upward, soft wave movement."
+    },
+    {
+      "code": "gjsl",
+      "name": "Gujarati Sign Language (G-ISL)",
+      "english_name": "Gujarati Localized ISL",
+      "group": "primary",
+      "has_reviewers": true,
+      "coverage_count": 650,
+      "description_placeholder": "e.g. dominant hand flat pointing up near temple."
+    },
+    {
+      "code": "bsl",
+      "name": "British Sign Language",
+      "english_name": "British Sign Language",
+      "group": "primary",
+      "has_reviewers": true,
+      "coverage_count": 1400,
+      "description_placeholder": "e.g. right hand in a 'V' shape, palm facing me, moves in a small circle near temple."
+    }
+  ]
+}
