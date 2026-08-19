@@ -527,25 +527,99 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function renderTeacherDashboard() {
+        // 1. Mock Database of Students
+        const mockStudents = [
+            { id: "STU_01_122", name: "Aarav Sharma", grade: "Grade 3", progress: "88%", status: "On Track", lastActive: "Today" },
+            { id: "STU_01_123", name: "Diya Patel", grade: "Grade 3", progress: "95%", status: "Excelling", lastActive: "Yesterday" },
+            { id: "STU_01_124", name: "Kabir Singh", grade: "Grade 3", progress: "45%", status: "Needs Help", lastActive: "3 days ago" },
+            { id: "STU_01_125", name: "Ananya Iyer", grade: "Grade 3", progress: "72%", status: "On Track", lastActive: "Today" },
+            { id: "STU_01_126", name: "Rohan Gupta", grade: "Grade 3", progress: "10%", status: "Inactive", lastActive: "1 week ago" }
+        ];
+
+        // 2. Generate HTML Table Rows for each student
+        const studentRows = mockStudents.map(student => {
+            // Determine badge styling based on their performance status
+            let badgeBg = "#EFF6FF"; 
+            let badgeColor = "#1E3A8A"; // Default / On Track (Blue)
+            if (student.status === "Excelling") { badgeBg = "#ECFDF5"; badgeColor = "#065F46"; } // Green
+            if (student.status === "Needs Help") { badgeBg = "#FEF2F2"; badgeColor = "#991B1B"; } // Red
+            if (student.status === "Inactive") { badgeBg = "#F1F5F9"; badgeColor = "#475569"; }   // Gray
+
+            return `
+                <tr style="border-bottom: 1px solid #E2E8F0;">
+                    <td style="padding: 1rem; font-weight:600; color:var(--text-main);">${student.id}</td>
+                    <td style="padding: 1rem;">${student.name}</td>
+                    <td style="padding: 1rem;">
+                        <!-- Mini Progress Bar -->
+                        <div style="width: 100%; background: #E2E8F0; border-radius: 999px; height: 8px; margin-bottom: 4px;">
+                            <div style="width: ${student.progress}; background: #06D6A0; height: 8px; border-radius: 999px;"></div>
+                        </div>
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">${student.progress} Completed</span>
+                    </td>
+                    <td style="padding: 1rem;">
+                        <span style="background: ${badgeBg}; color: ${badgeColor}; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600;">
+                            ${student.status}
+                        </span>
+                    </td>
+                    <td style="padding: 1rem; color: var(--text-muted); font-size: 0.9rem;">${student.lastActive}</td>
+                    <td style="padding: 1rem; text-align: right;">
+                        <button class="sl-btn sl-btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="slViewStudent('${student.id}')">View Details</button>
+                    </td>
+                </tr>
+            `;
+        }).join('');
+
+        // 3. Render the Dashboard UI
         dashView.innerHTML = `
             <div class="sl-dashboard-container">
                 <div class="sl-dash-topbar">
                     <div class="sl-dash-welcome">
                         <h2>Teacher Portal</h2>
-                        <p style="color:var(--text-muted)">Welcome back, ${STATE.user.name}.</p>
+                        <p style="color:var(--text-muted)">Welcome back, ${STATE.user.name}. Here is your class overview.</p>
                     </div>
                     <div>
-                        <button class="sl-btn sl-btn-secondary">Export PDF Report</button>
+                        <button class="sl-btn sl-btn-secondary" onclick="slExportPDF()">📥 Export Class Report</button>
                     </div>
                 </div>
 
-                <div class="sl-chapter-card" style="padding:2rem;">
-                    <h3>Class Overview</h3>
-                    <p>Average Quiz Score: 84%</p>
-                    <p>Students Needing Help: 2</p>
-                    <hr style="border-top:1px solid #E2E8F0; margin:1.5rem 0;">
-                    <h4>Recent Assignments</h4>
-                    <p>Maths - Chapter 1 (Due: Tomorrow)</p>
+                <!-- Stats Overview Cards -->
+                <div class="sl-grid-3" style="margin-bottom: 2rem;">
+                    <div class="sl-chapter-card" style="padding:1.5rem; border-left: 4px solid #4A90E2;">
+                        <h3 style="color:var(--text-muted); font-size:1rem; margin-bottom:0.5rem;">Average Quiz Score</h3>
+                        <p style="font-size: 2rem; font-weight: 900;">84%</p>
+                    </div>
+                    <div class="sl-chapter-card" style="padding:1.5rem; border-left: 4px solid #FF9F1C;">
+                        <h3 style="color:var(--text-muted); font-size:1rem; margin-bottom:0.5rem;">Students Needing Help</h3>
+                        <p style="font-size: 2rem; font-weight: 900;">2</p>
+                    </div>
+                    <div class="sl-chapter-card" style="padding:1.5rem; border-left: 4px solid #06D6A0;">
+                        <h3 style="color:var(--text-muted); font-size:1rem; margin-bottom:0.5rem;">Recent Submissions</h3>
+                        <p style="font-size: 2rem; font-weight: 900;">12</p>
+                    </div>
+                </div>
+
+                <!-- Interactive Student List Table -->
+                <div class="sl-chapter-card" style="padding: 2rem; overflow-x: auto;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                        <h3 style="font-size: 1.4rem; font-weight: 800;">Student Roster</h3>
+                        <input type="text" placeholder="Search students by name or ID..." style="padding: 0.6rem 1rem; border: 1px solid #CBD5E1; border-radius: 8px; width: 300px; font-family: inherit;">
+                    </div>
+                    
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid #E2E8F0; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">
+                                <th style="padding: 1rem; font-weight: 800;">Student ID</th>
+                                <th style="padding: 1rem; font-weight: 800;">Name</th>
+                                <th style="padding: 1rem; font-weight: 800;">Course Progress</th>
+                                <th style="padding: 1rem; font-weight: 800;">Status</th>
+                                <th style="padding: 1rem; font-weight: 800;">Last Active</th>
+                                <th style="padding: 1rem; font-weight: 800; text-align: right;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${studentRows}
+                        </tbody>
+                    </table>
                 </div>
             </div>
         `;
@@ -633,3 +707,106 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+window.slExportPDF = function() {
+    const mockStudents = [
+        { id: "STU_01_122", name: "Aarav Sharma", progress: "88%", status: "On Track", lastActive: "Today" },
+        { id: "STU_01_123", name: "Diya Patel", progress: "95%", status: "Excelling", lastActive: "Yesterday" },
+        { id: "STU_01_124", name: "Kabir Singh", progress: "45%", status: "Needs Help", lastActive: "3 days ago" },
+        { id: "STU_01_125", name: "Ananya Iyer", progress: "72%", status: "On Track", lastActive: "Today" },
+        { id: "STU_01_126", name: "Rohan Gupta", progress: "10%", status: "Inactive", lastActive: "1 week ago" }
+    ];
+
+    if (!window.jspdf) {
+        alert("PDF library is still loading. Please try again in a second.");
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("SAMAVESH - Class Progress Report", 14, 22);
+    
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    doc.text("Generated on: " + new Date().toLocaleDateString(), 14, 30);
+
+    const tableColumn = ["Student ID", "Name", "Progress", "Status", "Last Active"];
+    const tableRows = [];
+
+    mockStudents.forEach(student => {
+        const studentData = [student.id, student.name, student.progress, student.status, student.lastActive];
+        tableRows.push(studentData);
+    });
+
+    doc.autoTable({
+        head: [tableColumn],
+        body: tableRows,
+        startY: 40,
+        theme: 'grid',
+        headStyles: { fillColor: [74, 144, 226] }
+    });
+
+    doc.save("Samavesh_Class_Report.pdf");
+};
+window.slViewStudent = function(studentId) {
+    const mockStudents = [
+        { id: "STU_01_122", name: "Aarav Sharma", grade: "Grade 3", progress: "88%", status: "On Track", lastActive: "Today" },
+        { id: "STU_01_123", name: "Diya Patel", grade: "Grade 3", progress: "95%", status: "Excelling", lastActive: "Yesterday" },
+        { id: "STU_01_124", name: "Kabir Singh", grade: "Grade 3", progress: "45%", status: "Needs Help", lastActive: "3 days ago" },
+        { id: "STU_01_125", name: "Ananya Iyer", grade: "Grade 3", progress: "72%", status: "On Track", lastActive: "Today" },
+        { id: "STU_01_126", name: "Rohan Gupta", grade: "Grade 3", progress: "10%", status: "Inactive", lastActive: "1 week ago" }
+    ];
+    
+    const student = mockStudents.find(s => s.id === studentId);
+    if (!student) return;
+
+    let modal = document.getElementById("slStudentDetailModal");
+    if (!modal) {
+        modal = document.createElement("div");
+        modal.id = "slStudentDetailModal";
+        modal.className = "sl-modal-overlay";
+        modal.style.display = "none";
+        document.body.appendChild(modal);
+    }
+
+    modal.innerHTML = `
+        <div class="sl-auth-card" style="max-width: 500px; width: 100%;">
+            <button class="sl-modal-close" onclick="document.getElementById('slStudentDetailModal').style.display='none'">✕</button>
+            
+            <div class="sl-auth-header" style="text-align: left; margin-bottom: 1.5rem;">
+                <div style="display:flex; align-items:center; gap:1rem;">
+                    <div class="sl-avatar-circle" style="width:50px; height:50px; font-size:1.5rem;">
+                        ${student.name.charAt(0)}
+                    </div>
+                    <div>
+                        <h2 style="font-size:1.6rem; font-weight:900; color:var(--text-main); margin:0;">${student.name}</h2>
+                        <p style="color:var(--text-muted); margin:0; font-size:0.9rem;">ID: ${student.id} | ${student.grade}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="background: #F8FAFC; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                    <span style="font-weight: 600; color: var(--text-muted);">Current Progress</span>
+                    <span style="font-weight: 800; color: #06D6A0;">${student.progress}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
+                    <span style="font-weight: 600; color: var(--text-muted);">System Status</span>
+                    <span style="font-weight: 800;">${student.status}</span>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="font-weight: 600; color: var(--text-muted);">Last Active</span>
+                    <span style="font-weight: 800;">${student.lastActive}</span>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 1rem;">
+                <button class="sl-btn sl-btn-primary" style="flex: 1; justify-content: center;" onclick="alert('Message sent!')">💬 Message</button>
+                <button class="sl-btn sl-btn-outline" style="flex: 1; justify-content: center;" onclick="alert('Module assigned.')">📚 Assign Work</button>
+            </div>
+        </div>
+    `;
+
+    modal.style.display = "flex";
+};
