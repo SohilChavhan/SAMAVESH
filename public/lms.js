@@ -184,6 +184,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <div class="sl-subject-tab active maths" data-subj="maths">📐 Maths</div>
                     <div class="sl-subject-tab language" data-subj="language">📚 Language</div>
                     <div class="sl-subject-tab science" data-subj="science">🔬 Science</div>
+                    <div class="sl-subject-tab signlang" data-subj="signlang">👋 Sign Language</div>
                 </div>
 
                 <div id="courseContent"></div>
@@ -222,6 +223,44 @@ document.addEventListener("DOMContentLoaded", () => {
 
         let html = '';
         chapters.forEach(ch => {
+            let videoListHtml = '';
+            
+            if (subject === 'signlang') {
+                videoListHtml = `
+                    <div class="sl-video-list">
+                        <div class="sl-video-item" onclick="slPlayVideo('${subject}', ${ch.id}, 'playlist:PLFjydPMg4Dapq9vcdmGyHs8uJhiqMgUrX')">
+                            <div><strong>Video 1:</strong> Sign Language Tutorial (Playlist)</div>
+                            <div>▶️ Play</div>
+                        </div>
+                        <div class="sl-video-item" style="cursor: default; opacity: 0.6;">
+                            <div><strong>Placeholder 2:</strong> Video coming soon</div>
+                            <div>⏳ Pending</div>
+                        </div>
+                        <div class="sl-video-item" style="cursor: default; opacity: 0.6;">
+                            <div><strong>Placeholder 3:</strong> Video coming soon</div>
+                            <div>⏳ Pending</div>
+                        </div>
+                    </div>
+                `;
+            } else {
+                videoListHtml = `
+                    <div class="sl-video-list">
+                        <div class="sl-video-item" onclick="slPlayVideo('${subject}', ${ch.id}, ${subject === 'maths' && ch.id === 1 ? "'mjlsSYLLOSE'" : "'v1'"})">
+                            <div><strong>Video 1:</strong> ${subject === 'maths' && ch.id === 1 ? 'Introduction to Basics (YouTube)' : 'Introduction to ' + subject}</div>
+                            <div>▶️ Play</div>
+                        </div>
+                        <div class="sl-video-item" onclick="slPlayVideo('${subject}', ${ch.id}, 'v2')">
+                            <div><strong>Video 2:</strong> Learning the Signs</div>
+                            <div>▶️ Play</div>
+                        </div>
+                        <div class="sl-video-item" onclick="slPlayVideo('${subject}', ${ch.id}, 'v3')">
+                            <div><strong>Video 3:</strong> Practice with Friends</div>
+                            <div>▶️ Play</div>
+                        </div>
+                    </div>
+                `;
+            }
+
             html += `
                 <div class="sl-chapter-card">
                     <div class="sl-chapter-header" onclick="document.getElementById('ch-${subject}-${ch.id}').classList.toggle('open')">
@@ -232,20 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         <div>▼</div>
                     </div>
                     <div class="sl-chapter-content" id="ch-${subject}-${ch.id}">
-                        <div class="sl-video-list">
-                            <div class="sl-video-item" onclick="slPlayVideo('${subject}', ${ch.id}, ${subject === 'maths' && ch.id === 1 ? "'xA1XEVWzAYg'" : "'v1'"})">
-                                <div><strong>Video 1:</strong> ${subject === 'maths' && ch.id === 1 ? 'Introduction to Basics (YouTube)' : 'Introduction to ' + subject}</div>
-                                <div>▶️ Play</div>
-                            </div>
-                            <div class="sl-video-item" onclick="slPlayVideo('${subject}', ${ch.id}, 'v2')">
-                                <div><strong>Video 2:</strong> Learning the Signs</div>
-                                <div>▶️ Play</div>
-                            </div>
-                            <div class="sl-video-item" onclick="slPlayVideo('${subject}', ${ch.id}, 'v3')">
-                                <div><strong>Video 3:</strong> Practice with Friends</div>
-                                <div>▶️ Play</div>
-                            </div>
-                        </div>
+                        ${videoListHtml}
                         <button class="sl-btn sl-btn-primary" onclick="slStartQuiz('${subject}', ${ch.id})">🏆 Take Chapter Quiz</button>
                     </div>
                 </div>
@@ -298,6 +324,16 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("slDashboardView").style.display = "none";
         document.getElementById("slVideoPlayerView").style.display = "block";
         
+        const avatarPane = document.querySelector("#slVideoPlayerView .sl-avatar-pane");
+        const videoPane = document.querySelector("#slVideoPlayerView .sl-video-pane");
+        if (subject === 'signlang') {
+            if (avatarPane) avatarPane.style.display = 'none';
+            if (videoPane) videoPane.style.width = '100%';
+        } else {
+            if (avatarPane) avatarPane.style.display = 'block';
+            if (videoPane) videoPane.style.width = '';
+        }
+        
         const captions = document.getElementById("slCaptions");
         const container = document.getElementById("slVideoContainer");
         
@@ -324,7 +360,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         STATE._videoTranslator._rendered = true;
                     }
                     const vt = STATE._videoTranslator;
-                    await vt._loadSignLanguage('gisl');
+                    await vt._loadSignLanguage('isl');
                     const tokens = await vt._doPlan(text, false);
                     if (tokens.length) {
                         const { sigml } = vt._buildSigml(tokens);
@@ -348,39 +384,67 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
-        if (videoId === 'xA1XEVWzAYg') {
-            container.innerHTML = `<div id="sl-yt-${videoId}"></div>`;
+        const isPlaylist = videoId.startsWith('playlist:');
+        const ytId = isPlaylist ? videoId.split(':')[1] : videoId;
+
+        if (ytId === 'mjlsSYLLOSE' || ytId === 'RyGU-8ZY5jw' || isPlaylist) {
+            container.innerHTML = `<div id="sl-yt-${ytId}"></div>`;
             container.className = "";
             
             function initYTPlayer() {
-                window._slYtPlayer = new YT.Player(`sl-yt-${videoId}`, {
+                let playerVars = { 'autoplay': 1, 'playsinline': 1 };
+                if (isPlaylist) {
+                    playerVars.listType = 'playlist';
+                    playerVars.list = ytId;
+                }
+                
+                let playerConfig = {
                     height: '400',
                     width: '100%',
-                    videoId: videoId,
-                    playerVars: { 'autoplay': 1, 'playsinline': 1 },
+                    playerVars: playerVars,
                     events: {
                         'onReady': (event) => {
-                            fetch(`/data/yt_${videoId}.json`).then(res => res.json()).then(script => {
-                                let currentLine = -1;
-                                
-                                window._slVideoTimer = setInterval(() => {
-                                    if (!window._slYtPlayer || typeof window._slYtPlayer.getCurrentTime !== 'function') return;
+                            if (!isPlaylist) {
+                                fetch(`/data/yt_${ytId}.json`).then(res => res.json()).then(script => {
+                                    window._slCurrentLine = -1;
+                                    window._slScript = script;
                                     
-                                    const elapsed = window._slYtPlayer.getCurrentTime();
-                                    for (let i = script.length - 1; i >= 0; i--) {
-                                        if (elapsed >= script[i].time) {
-                                            if (currentLine !== i) {
-                                                currentLine = i;
-                                                playLunaText(script[i].text);
+                                    window._slVideoTimer = setInterval(() => {
+                                        if (!window._slYtPlayer || typeof window._slYtPlayer.getCurrentTime !== 'function') return;
+                                        
+                                        if (window._slYtPlayer.getPlayerState && window._slYtPlayer.getPlayerState() === YT.PlayerState.PAUSED) return;
+                                        
+                                        const elapsed = window._slYtPlayer.getCurrentTime();
+                                        for (let i = window._slScript.length - 1; i >= 0; i--) {
+                                            if (elapsed >= window._slScript[i].time) {
+                                                if (window._slCurrentLine !== i) {
+                                                    window._slCurrentLine = i;
+                                                    playLunaText(window._slScript[i].text);
+                                                }
+                                                break;
                                             }
-                                            break;
                                         }
-                                    }
-                                }, 500);
-                            }).catch(e => console.error("Error loading transcript", e));
+                                    }, 500);
+                                }).catch(e => console.error("Error loading transcript", e));
+                            }
+                        },
+                        'onStateChange': (event) => {
+                            if (event.data === YT.PlayerState.PAUSED) {
+                                if (window.CWASA) {
+                                    try { CWASA.stopSiGML(0); } catch(e) {}
+                                }
+                            } else if (event.data === YT.PlayerState.PLAYING) {
+                                window._slCurrentLine = -1;
+                            }
                         }
                     }
-                });
+                };
+
+                if (!isPlaylist) {
+                    playerConfig.videoId = ytId;
+                }
+
+                window._slYtPlayer = new YT.Player(`sl-yt-${ytId}`, playerConfig);
             }
 
             if (typeof YT === 'undefined' || typeof YT.Player === 'undefined') {

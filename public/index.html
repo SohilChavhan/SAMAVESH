@@ -10,9 +10,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,800;9..40,900&display=swap" rel="stylesheet">
   
-  <link rel="stylesheet" href="/styles/lms.css">
+  <link rel="stylesheet" href="/styles/lms.css?v=2">
+  <link rel="icon" type="image/png" href="/logo.png">
   <script defer src="/luna-translator.js"></script>
-  <script defer src="/lms.js"></script>
+  <script defer src="/lms.js?v=5"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 </head>
@@ -22,7 +23,7 @@
   <header class="sl-header">
     <nav class="sl-nav">
       <a href="/" class="sl-logo">
-        <div class="sl-logo-icon">🤟</div>
+        <img src="/logo.png" class="sl-logo-icon" alt="SAMAVESH Logo" style="object-fit: contain; background: transparent; box-shadow: none;">
         SAMAVESH
       </a>
       
@@ -137,6 +138,15 @@
             <p>Plants, animals, and discovering how things work.</p>
             <button class="sl-btn sl-btn-primary sl-login-trigger" data-role="student">Explore Science</button>
           </div>
+          <!-- Sign Language -->
+          <div class="sl-subject-card signlang">
+            <div class="sl-subject-header">
+              <div class="sl-subject-badge-icon" style="background:#F3E8FF; color:#8338EC;">👋</div>
+              <h3>Sign Language</h3>
+            </div>
+            <p>Learn to communicate with hands, expressions, and gestures.</p>
+            <button class="sl-btn sl-btn-outline sl-login-trigger" data-role="student" style="color: #8338EC; border-color: #8338EC;">Explore Sign Language</button>
+          </div>
         </div>
       </section>
 
@@ -213,7 +223,7 @@
               <div class="CWASAAvatar av0"></div>
             </div>
             <div class="sl-captions-box" id="slCaptions">
-              Loading captions...
+              Waiting for signs...
             </div>
           </div>
           

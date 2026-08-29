@@ -392,6 +392,7 @@ body {
 .sl-subject-card.maths { border-color: #FFE5A3; }
 .sl-subject-card.language { border-color: #C3F5E7; }
 .sl-subject-card.science { border-color: #D3E5FF; }
+.sl-subject-card.signlang { border-color: #E6D4FF; }
 
 .sl-subject-card:hover {
   transform: translateY(-6px);
@@ -721,6 +722,12 @@ body {
   border-color: var(--primary);
   background: #EFF6FF;
   color: #1D4ED8;
+}
+
+.sl-subject-tab.active.signlang {
+  border-color: var(--accent-purple);
+  background: #F3E8FF;
+  color: #6B21A8;
 }
 
 /* Chapter Accordion & Video List */
