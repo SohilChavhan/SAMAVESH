@@ -899,6 +899,14 @@
 
   function playSiGML(sigml) {
     if (!sigml) return false;
+    if (typeof sigml !== 'string') {
+      console.warn('[chat2hamnosys] playSiGML expected string, got:', typeof sigml);
+      return false;
+    }
+    if (sigml.indexOf('[object Object]') !== -1) {
+      console.warn('[chat2hamnosys] playSiGML aborted due to [object Object] in string');
+      return false;
+    }
     if (state.cwasaFailed || !window.CWASA || typeof CWASA.playSiGMLText !== 'function') {
       return false;
     }

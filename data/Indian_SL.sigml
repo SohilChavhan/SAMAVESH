@@ -5561,29 +5561,6 @@
   		<hamparend />
   		<hamtouch />
   		<hamchest />
-  		<hamparbegin />
-  		<hamfinger2 />
-  		<hamthumbacrossmod />
-  		<hamplus />
-  		<hamfinger2345 />
-  		<hamthumboutmod />
-  		<hamparend />
-  		<hamparbegin />
-  		<hamextfingerol />
-  		<hampalmdl />
-  		<hamplus />
-  		<hamextfingeror />
-  		<hampalmdr />
-  		<hamparend />
-  		<hamparbegin />
-  		<hamfingertip />
-  		<hamindexfinger />
-  		<hamplus />
-  		<hamfingertip />
-  		<hamindexfinger />
-  		<hamparend />
-  		<hamtouch />
-  		<hamchest />
   	</hamnosys_manual>
   </hns_sign>
 
@@ -16126,4 +16103,90 @@
   </hns_sign>
 
 
+
+  <hns_sign gloss="b">
+		<hamnosys_nonmanual>
+			<hnm_mouthpicture picture="bi:" />
+		</hamnosys_nonmanual>
+		<hamnosys_manual>
+			<hamsymmlr />
+			<hampinch12open />
+			<hamextfingeru />
+			<hampalml />
+			<hamparbegin />
+			<hamfingertip />
+			<hamthumb />
+			<hamindexfinger />
+			<hamplus />
+			<hamfingertip />
+			<hamthumb />
+			<hamindexfinger />
+			<hamparend />
+			<hamtouch />
+			<hamchest />
+			<hamclose />
+		</hamnosys_manual>
+	</hns_sign>
+
+  
+  <hns_sign gloss="p">
+		<hamnosys_nonmanual>
+			<hnm_mouthpicture picture="PE:" />
+		</hamnosys_nonmanual>
+		<hamnosys_manual>
+			<hamparbegin />
+			<hampinch12open />
+			<hamplus />
+			<hamfinger2 />
+			<hamthumbacrossmod />
+			<hamparend />
+			<hamparbegin />
+			<hamextfingeru />
+			<hampalml />
+			<hamplus />
+			<hamextfingeru />
+			<hambetween />
+			<hamextfingerur />
+			<hampalmd />
+			<hamparend />
+			<hamparbegin />
+			<hamindexfinger />
+			<hamfingertip />
+			<hamplus />
+			<hamthumb />
+			<hamindexfinger />
+			<hamfingertip />
+			<hamparend />
+			<hamtouch />
+			<hamshoulders />
+			<hamclose />
+		</hamnosys_manual>
+	</hns_sign>
+
+  
+  <hns_sign gloss="x">
+		<hamnosys_nonmanual>
+			<hnm_mouthpicture picture="es" />
+		</hamnosys_nonmanual>
+		<hamnosys_manual>
+			<hamfinger2 />
+			<hamparbegin />
+			<hamextfingerul />
+			<hampalmd />
+			<hamplus />
+			<hamextfingerur />
+			<hampalmd />
+			<hamparend />
+			<hamparbegin />
+			<hamindexfinger />
+			<hamfingermidjoint />
+			<hamplus />
+			<hamindexfinger />
+			<hamfingermidjoint />
+			<hamparend />
+			<hamtouch />
+		</hamnosys_manual>
+	</hns_sign>
+
+  
 </sigml_collection>

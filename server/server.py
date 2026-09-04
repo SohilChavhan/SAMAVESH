@@ -629,6 +629,11 @@ def process_sentence(doc_or_span, stopwords: set, time_words: set, pronouns: dic
             j += 1
             continue
 
+        if len(text) == 1 and text.isalpha():
+            tokens_with_pos.append((text, pos))
+            j += 1
+            continue
+
         candidate = None
         pos = token.pos_
 
@@ -904,7 +909,7 @@ def admin_ops(token: Optional[str] = None):
 
 _SUPPORTED_SIGN_LANGS = {
     "bsl", "asl", "dgs", "lsf", "lse", "pjm", "gsl", "rsl",
-    "algerian", "bangla", "ngt", "fsl", "isl", "kurdish", "vsl", "gjsl",
+    "algerian", "bangla", "ngt", "fsl", "isl", "kurdish", "vsl", "gjsl", "gisl",
 }
 # Argos packages pre-warmed in _ensure_argos(). Any source_lang or target_lang
 # outside this set is either unsupported (soft error) or a pass-through.
