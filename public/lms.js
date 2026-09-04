@@ -31,6 +31,28 @@ document.addEventListener("DOMContentLoaded", () => {
         authOverlay.style.display = "flex";
     }));
 
+    const contactOverlay = document.getElementById("slContactModal");
+    const openContactBtn = document.getElementById("openContactModal");
+    const closeContactBtn = document.getElementById("closeContactModal");
+
+    if (openContactBtn && contactOverlay) {
+        openContactBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            contactOverlay.style.display = "flex";
+        });
+    }
+
+    if (closeContactBtn && contactOverlay) {
+        closeContactBtn.addEventListener("click", () => {
+            contactOverlay.style.display = "none";
+        });
+    }
+
+    window.addEventListener("click", (e) => {
+        if (e.target === authOverlay) authOverlay.style.display = "none";
+        if (e.target === contactOverlay) contactOverlay.style.display = "none";
+    });
+
     if (closeAuthBtn) {
         closeAuthBtn.addEventListener("click", () => {
             authOverlay.style.display = "none";
@@ -53,16 +75,20 @@ document.addEventListener("DOMContentLoaded", () => {
         
         const inputLabel = document.getElementById("authInputLabel");
         const inputHint = document.getElementById("authInputHint");
+        const inputReg = document.getElementById("authRegNumber");
         
         if (role === "student") {
             inputLabel.innerText = "Student ID";
             inputHint.innerText = "Format: STU_<year>_<roll> (e.g. STU_01_122)";
+            if (inputReg) inputReg.placeholder = "e.g. STU_01_122";
         } else if (role === "teacher") {
             inputLabel.innerText = "Teacher ID";
-            inputHint.innerText = "Format: PRO_<id> (e.g. PRO1233)";
+            inputHint.innerText = "Format: PRO_<id> (e.g. PRO_1233)";
+            if (inputReg) inputReg.placeholder = "e.g. PRO_1233";
         } else {
             inputLabel.innerText = "Parent Email or ID";
             inputHint.innerText = "Enter your registered email address";
+            if (inputReg) inputReg.placeholder = "Your Registered Email ID";
         }
         document.getElementById("authRole").value = role;
         authError.style.display = "none";
@@ -666,7 +692,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <div class="sl-chapter-card" style="padding: 2rem; overflow-x: auto;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                         <h3 style="font-size: 1.4rem; font-weight: 800;">Student Roster</h3>
-                        <input type="text" placeholder="Search students by name or ID..." style="padding: 0.6rem 1rem; border: 1px solid #CBD5E1; border-radius: 8px; width: 300px; font-family: inherit;">
+                        <input type="text" id="teacherSearchInput" placeholder="Search students by name or ID..." style="padding: 0.6rem 1rem; border: 1px solid #CBD5E1; border-radius: 8px; width: 300px; font-family: inherit;">
                     </div>
                     
                     <table style="width: 100%; border-collapse: collapse; text-align: left;">
@@ -680,13 +706,69 @@ document.addEventListener("DOMContentLoaded", () => {
                                 <th style="padding: 1rem; font-weight: 800; text-align: right;">Actions</th>
                             </tr>
                         </thead>
-                        <tbody>
+                        <tbody id="teacherRosterBody">
                             ${studentRows}
                         </tbody>
                     </table>
                 </div>
             </div>
         `;
+
+        // 4. Attach real-time search functionality
+        const searchInput = document.getElementById("teacherSearchInput");
+        const rosterBody = document.getElementById("teacherRosterBody");
+
+        function renderRows(studentsList) {
+            if (studentsList.length === 0) {
+                rosterBody.innerHTML = `
+                    <tr>
+                        <td colspan="6" style="padding: 2rem; text-align: center; color: var(--text-muted);">
+                            No students found matching your search.
+                        </td>
+                    </tr>`;
+                return;
+            }
+            rosterBody.innerHTML = studentsList.map(student => {
+                let badgeBg = "#EFF6FF"; 
+                let badgeColor = "#1E3A8A";
+                if (student.status === "Excelling") { badgeBg = "#ECFDF5"; badgeColor = "#065F46"; }
+                if (student.status === "Needs Help") { badgeBg = "#FEF2F2"; badgeColor = "#991B1B"; }
+                if (student.status === "Inactive") { badgeBg = "#F1F5F9"; badgeColor = "#475569"; }
+
+                return `
+                    <tr style="border-bottom: 1px solid #E2E8F0;">
+                        <td style="padding: 1rem; font-weight:600; color:var(--text-main);">${student.id}</td>
+                        <td style="padding: 1rem;">${student.name}</td>
+                        <td style="padding: 1rem;">
+                            <div style="width: 100%; background: #E2E8F0; border-radius: 999px; height: 8px; margin-bottom: 4px;">
+                                <div style="width: ${student.progress}; background: #06D6A0; height: 8px; border-radius: 999px;"></div>
+                            </div>
+                            <span style="font-size: 0.85rem; color: var(--text-muted);">${student.progress} Completed</span>
+                        </td>
+                        <td style="padding: 1rem;">
+                            <span style="background: ${badgeBg}; color: ${badgeColor}; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600;">
+                                ${student.status}
+                            </span>
+                        </td>
+                        <td style="padding: 1rem; color: var(--text-muted); font-size: 0.9rem;">${student.lastActive}</td>
+                        <td style="padding: 1rem; text-align: right;">
+                            <button class="sl-btn sl-btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="slViewStudent('${student.id}')">View Details</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        if (searchInput && rosterBody) {
+            searchInput.addEventListener("input", (e) => {
+                const query = e.target.value.toLowerCase().trim();
+                const filtered = mockStudents.filter(student => 
+                    student.name.toLowerCase().includes(query) || 
+                    student.id.toLowerCase().includes(query)
+                );
+                renderRows(filtered);
+            });
+        }
     }
 
     function renderParentDashboard() {
