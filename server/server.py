@@ -28,7 +28,7 @@ _SERVER_ROOT = Path(__file__).resolve().parent
 if str(_SERVER_ROOT) not in sys.path:
     sys.path.insert(0, str(_SERVER_ROOT))
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse, Response
 from fastapi.staticfiles import StaticFiles
@@ -208,7 +208,7 @@ STOPWORDS = {
     "en": {
         "a","an","the","and","or","but","if","then","than",
         "of","to","in","on","at","for","from","with","as","by","is","are","am",
-        "be","been","was","were","do","does","did","it","its","that","this","those","these",
+        "be","been","was","were","do","does","did"
     },
     "de": {
         "der","die","das","ein","eine","einem","einen","einer",
@@ -696,7 +696,7 @@ def process_sentence(doc_or_span, stopwords: set, time_words: set, pronouns: dic
             candidate = text
         elif pos == "VERB":
             candidate = token.lemma_.lower()
-        elif pos in {"NOUN","PROPN","ADJ","INTJ","NUM","ADV","DET"} and text not in stopwords:
+        elif pos in {"NOUN","PROPN","ADJ","INTJ","NUM","ADV","DET","ADP"} and text not in stopwords:
             if text.isdigit():
                 try:
                     candidate = _number_to_words(int(text))
@@ -1391,6 +1391,7 @@ async def api_transcribe(request: Request):
         raise HTTPException(status_code=502, detail="Transcription service failed")
 
     return {"text": text, "provider": "gladia"}
+
 
 
 try:

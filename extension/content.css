@@ -1,0 +1,51 @@
+#samavesh-luna-overlay {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 320px;
+  height: 400px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+  z-index: 2147483647; /* Maximum z-index to stay on top */
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border: 1px solid #e0e0e0;
+}
+
+.samavesh-luna-header {
+  height: 40px;
+  background: #8338EC; /* SAMAVESH Purple */
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.samavesh-luna-header button {
+  background: transparent;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.8;
+  transition: opacity 0.2s;
+}
+
+.samavesh-luna-header button:hover {
+  opacity: 1;
+}
+
+.samavesh-luna-iframe {
+  width: 100%;
+  height: calc(100% - 40px);
+  border: none;
+  background: #F8FAFC;
+}

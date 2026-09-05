@@ -649,7 +649,7 @@
       if (bestBase && bestScore >= cutoff) {
         const g = baseToGlossLocal.get(bestBase); mapped.push(g); subs[t] = g;
       } else {
-        if (this.letterToSign.size > 0 && /[A-Za-z]/.test(t)) { mapped.push(t); fingerspelled.push(t); }
+        if (this.letterToSign.size > 0 && /\p{L}/u.test(t)) { mapped.push(t); fingerspelled.push(t); }
         else missing.push(t);
       }
     }

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SAMAVESH LUNA Extension</title>
+  <link rel="stylesheet" href="/styles/lms.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: transparent;
+      overflow-y: auto; /* Enable scrolling */
+      font-family: 'DM Sans', sans-serif;
+    }
+    #lunaWidget {
+      width: 100%;
+      min-height: 100%;
+      background: #F8FAFC;
+    }
+    /* Hide the built-in UI elements since we want it automatic */
+    .sl-luna-header,
+    .sl-luna-input-pane,
+    .sl-luna-status-row,
+    .sl-luna-playback {
+      display: none !important;
+    }
+    .sl-luna-avatar-pane {
+      padding: 0 !important;
+      border: none !important;
+      background: transparent !important;
+    }
+    .sl-luna-widget {
+      padding: 0 !important;
+      gap: 0 !important;
+      border: none !important;
+      box-shadow: none !important;
+      background: transparent !important;
+    }
+    .sl-luna-body {
+      display: block !important;
+    }
+  </style>
+</head>
+<body>
+  
+  <div id="lunaWidget"></div>
+
+  <!-- Permanent pool for WebGL Avatar slots -->
+  <div id="sl-avatar-pool" style="position:absolute; visibility:hidden; z-index:-9999; pointer-events:none; left:-9999px;">
+    <div id="cwa-av1-container" class="CWASAAvatar av1" style="width:100%; height:100%;"></div>
+    <div id="cwa-av1-gui" class="CWASAGUI av1" style="display:none" aria-hidden="true"></div>
+  </div>
+
+  <script src="/cwa/allcsa.js"></script>
+  <script src="/luna-translator.js"></script>
+  <script>
+    let lt = null;
+
+    // Initialize CWASA and Luna Translator
+    function initCWASA() {
+      if (!window.CWASA) {
+        setTimeout(initCWASA, 100);
+        return;
+      }
+      CWASA.init({
+        useClientConfig: false,
+        useCwaConfig: true,
+        avSettings: [
+          // Dummy av0
+          { width: 1, height: 1, avList: 'avsfull', initAv: 'luna', ambIdle: false, allowFrameSteps: false, allowSiGMLText: false },
+          // av1 for our extension
+          { width: 320, height: 360, avList: 'avsfull', initAv: 'luna', ambIdle: true, allowFrameSteps: false, allowSiGMLText: false }
+        ]
+      });
+
+      // Initialize LunaTranslator
+      lt = new LunaTranslator({ containerId: 'lunaWidget', avatarSlot: 1 });
+      lt.render();
+      lt.init();
+
+      // Force language to G-ISL
+      setTimeout(() => {
+        const tgtSelect = document.getElementById('lunaWidget_tgtLang');
+        if (tgtSelect) {
+          tgtSelect.value = 'gisl';
+          tgtSelect.dispatchEvent(new Event('change'));
+        }
+      }, 500);
+    }
+
+    initCWASA();
+
+    // Listen for translation requests from the Chrome Extension
+    window.addEventListener('message', (event) => {
+      if (event.data && event.data.type === 'TRANSLATE_TEXT') {
+        const text = event.data.text;
+        if (lt) {
+          // The translator UI has a textarea, we can fill it and trigger translation
+          const textArea = document.getElementById('lunaWidget_textInput');
+          if (textArea) {
+            textArea.value = text;
+            // The extension translates from English by default
+            const srcLang = document.getElementById('lunaWidget_srcLang');
+            if (srcLang) srcLang.value = 'en';
+            
+            // Call the translate logic
+            lt._runTranslate();
+          }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
