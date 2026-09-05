@@ -2025,3 +2025,72 @@ input:checked + .sl-slider:before {
         padding: 1rem;
     }
 }
+
+/* Parent Portal Progress Summary Card & Popup Modal Styles */
+.sl-btn-progress-details {
+    background: #06D6A0;
+    color: #034B38;
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px rgba(6, 214, 160, 0.3);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.sl-btn-progress-details:hover {
+    background: #05c08f;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(6, 214, 160, 0.4);
+}
+
+.sl-progress-popup-card {
+    background: #FFFFFF;
+    border-radius: 24px;
+    padding: 2rem;
+    width: 100%;
+    max-width: 680px;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+    animation: slPopIn 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes slPopIn {
+    from { opacity: 0; transform: scale(0.95) translateY(10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+.sl-progress-stat-pill {
+    background: #F8FAFC;
+    border: 1px solid #E2E8F0;
+    border-radius: 16px;
+    padding: 1rem;
+    text-align: center;
+    flex: 1;
+    min-width: 130px;
+}
+
+.sl-progress-bar-track {
+    width: 100%;
+    height: 10px;
+    background: #E2E8F0;
+    border-radius: 20px;
+    overflow: hidden;
+    margin-top: 0.4rem;
+}
+
+.sl-progress-bar-fill {
+    height: 100%;
+    border-radius: 20px;
+    transition: width 0.6s ease;
+}

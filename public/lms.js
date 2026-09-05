@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const authForm = document.getElementById("slAuthForm");
     const authError = document.getElementById("slAuthError");
     const profileBadge = document.getElementById("slProfileBadge");
-    
+
     const landingView = document.getElementById("slLandingView");
     const dashView = document.getElementById("slDashboardView");
 
@@ -63,6 +63,8 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("click", (e) => {
         if (e.target === authOverlay) closeAuthModal();
         if (e.target === contactOverlay) contactOverlay.style.display = "none";
+        const parentProgressModal = document.getElementById("slParentProgressModal");
+        if (parentProgressModal && e.target === parentProgressModal) parentProgressModal.style.display = "none";
     });
 
     if (closeAuthBtn) {
@@ -82,15 +84,15 @@ document.addEventListener("DOMContentLoaded", () => {
         authTabs.forEach(t => t.classList.remove("active"));
         const tab = Array.from(authTabs).find(t => t.dataset.tab === role);
         if (tab) tab.classList.add("active");
-        
+
         const inputLabel = document.getElementById("authInputLabel");
         const inputHint = document.getElementById("authInputHint");
         const inputReg = document.getElementById("authRegNumber");
-        
+
         if (inputReg) {
             inputReg.value = "";
         }
-        
+
         if (role === "student") {
             inputLabel.innerText = "Student ID";
             inputHint.innerText = "Format: STU_<year>_<roll> (e.g. STU_01_122)";
@@ -121,7 +123,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify({ reg_number: regNumber, role: role, remember_me: false })
             });
             const data = await response.json();
-            
+
             if (response.ok && data.success) {
                 STATE.user = data.user;
                 sessionStorage.setItem("sl_user", JSON.stringify(data.user));
@@ -156,7 +158,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     async function loadProgressAndRender() {
         if (!STATE.user) return;
-        
+
         try {
             const resp = await fetch(`${API_BASE}/api/lms/progress/${STATE.user.id}`);
             const data = await resp.json();
@@ -175,14 +177,14 @@ document.addEventListener("DOMContentLoaded", () => {
             showLanding();
             return;
         }
-        
+
         landingView.style.display = "none";
         dashView.style.display = "block";
 
         // Update Nav Profile Badge
         loginBtns.forEach(btn => btn.style.display = "none");
         profileBadge.style.display = "flex";
-        
+
         const avatarStr = STATE.user.name ? STATE.user.name.charAt(0).toUpperCase() : "U";
         document.getElementById("profileAvatar").innerText = avatarStr;
         document.getElementById("profileName").innerText = STATE.user.name;
@@ -240,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
         `;
 
         document.getElementById("btnProfileModal").addEventListener("click", showProfileModal);
-        
+
         const tabs = document.querySelectorAll(".sl-subject-tab");
         tabs.forEach(tab => {
             tab.addEventListener("click", () => {
@@ -259,7 +261,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function renderCourseContent(subject) {
         const contentDiv = document.getElementById("courseContent");
-        
+
         const chapters = [
             { id: 1, title: "Chapter 1: The Basics", icon: "⭐" },
             { id: 2, title: "Chapter 2: Moving Forward", icon: "🚀" },
@@ -269,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let html = '';
         chapters.forEach(ch => {
             let videoListHtml = '';
-            
+
             if (subject === 'signlang') {
                 videoListHtml = `
                     <div class="sl-video-list">
@@ -328,7 +330,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // CWASA Init and Player Logic
     let cwasaInitialized = false;
-    
+
     function ensureCWASA() {
         if (cwasaInitialized) return;
         if (window.CWASA) {
@@ -364,11 +366,11 @@ document.addEventListener("DOMContentLoaded", () => {
         </hns_sign>
     </sigml>`;
 
-    window.slPlayVideo = async function(subject, chapterId, videoId) {
+    window.slPlayVideo = async function (subject, chapterId, videoId) {
         // Switch views
         document.getElementById("slDashboardView").style.display = "none";
         document.getElementById("slVideoPlayerView").style.display = "block";
-        
+
         const avatarPane = document.querySelector("#slVideoPlayerView .sl-avatar-pane");
         const videoPane = document.querySelector("#slVideoPlayerView .sl-video-pane");
         if (subject === 'signlang') {
@@ -378,14 +380,14 @@ document.addEventListener("DOMContentLoaded", () => {
             if (avatarPane) avatarPane.style.display = 'block';
             if (videoPane) videoPane.style.width = '';
         }
-        
+
         const captions = document.getElementById("slCaptions");
         const container = document.getElementById("slVideoContainer");
-        
+
         if (window._slVideoTimer) {
             clearInterval(window._slVideoTimer);
         }
-        
+
         // Helper to translate and play text
         async function playLunaText(text) {
             captions.innerText = text;
@@ -413,16 +415,16 @@ document.addEventListener("DOMContentLoaded", () => {
                             setTimeout(() => {
                                 try {
                                     CWASA.stopSiGML(0);
-                                } catch(e) {}
+                                } catch (e) { }
                                 try {
                                     CWASA.playSiGMLText(sigml, 0);
-                                } catch(e) {
+                                } catch (e) {
                                     console.error("CWASA Play Error", e);
                                 }
                             }, 100);
                         }
                     }
-                } catch(e) {
+                } catch (e) {
                     console.error("Luna video translate error:", e);
                 }
             }
@@ -434,14 +436,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (ytId === 'mjlsSYLLOSE' || ytId === 'RyGU-8ZY5jw' || isPlaylist) {
             container.innerHTML = `<div id="sl-yt-${ytId}"></div>`;
             container.className = "";
-            
+
             function initYTPlayer() {
                 let playerVars = { 'autoplay': 1, 'playsinline': 1 };
                 if (isPlaylist) {
                     playerVars.listType = 'playlist';
                     playerVars.list = ytId;
                 }
-                
+
                 let playerConfig = {
                     height: '400',
                     width: '100%',
@@ -452,12 +454,12 @@ document.addEventListener("DOMContentLoaded", () => {
                                 fetch(`/data/yt_${ytId}.json`).then(res => res.json()).then(script => {
                                     window._slCurrentLine = -1;
                                     window._slScript = script;
-                                    
+
                                     window._slVideoTimer = setInterval(() => {
                                         if (!window._slYtPlayer || typeof window._slYtPlayer.getCurrentTime !== 'function') return;
-                                        
+
                                         if (window._slYtPlayer.getPlayerState && window._slYtPlayer.getPlayerState() === YT.PlayerState.PAUSED) return;
-                                        
+
                                         const elapsed = window._slYtPlayer.getCurrentTime();
                                         for (let i = window._slScript.length - 1; i >= 0; i--) {
                                             if (elapsed >= window._slScript[i].time) {
@@ -475,7 +477,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         'onStateChange': (event) => {
                             if (event.data === YT.PlayerState.PAUSED) {
                                 if (window.CWASA) {
-                                    try { CWASA.stopSiGML(0); } catch(e) {}
+                                    try { CWASA.stopSiGML(0); } catch (e) { }
                                 }
                             } else if (event.data === YT.PlayerState.PLAYING) {
                                 window._slCurrentLine = -1;
@@ -506,10 +508,10 @@ document.addEventListener("DOMContentLoaded", () => {
               <h3>[Educational Video Player]</h3>
               <p style="color:var(--text-muted)">The video lesson plays here.</p>`;
             container.className = "sl-video-placeholder";
-            
+
             let lessonText = "Hello! Let's learn about " + subject + "!";
             playLunaText(lessonText);
-            
+
             // Simulate video completion after 5 seconds to update progress
             setTimeout(async () => {
                 try {
@@ -524,41 +526,41 @@ document.addEventListener("DOMContentLoaded", () => {
                         })
                     });
                     const data = await resp.json();
-                    if(data.success) {
+                    if (data.success) {
                         STATE.progress = data.progress;
                         captions.innerText = "Video completed! Course progress saved! 🌟";
                     }
-                } catch(e) {
+                } catch (e) {
                     console.error(e);
                 }
             }, 5000);
         }
     }
 
-    window.slCloseVideo = function() {
+    window.slCloseVideo = function () {
         if (window._slVideoTimer) {
             clearInterval(window._slVideoTimer);
         }
         if (window._slYtPlayer) {
-            try { window._slYtPlayer.destroy(); } catch(e) {}
+            try { window._slYtPlayer.destroy(); } catch (e) { }
             window._slYtPlayer = null;
         }
         if (window.CWASA) {
-            try { CWASA.stop(0); } catch(e) {}
+            try { CWASA.stop(0); } catch (e) { }
         }
-        
+
         const container = document.getElementById("slVideoContainer");
         if (container) container.innerHTML = "";
-        
+
         document.getElementById("slVideoPlayerView").style.display = "none";
         document.getElementById("slDashboardView").style.display = "block";
         loadProgressAndRender(); // refresh progress in dashboard
     }
 
-    window.slStartQuiz = function(subject, chapterId) {
+    window.slStartQuiz = function (subject, chapterId) {
         const qid = `${subject}_${chapterId}`;
         slToast(`Starting Quiz for ${subject} Chapter ${chapterId}... Simulating video sign answer.`, "info", 3500);
-        
+
         // Simulate kid uploading a video sign for question 1
         setTimeout(async () => {
             try {
@@ -571,15 +573,15 @@ document.addEventListener("DOMContentLoaded", () => {
                     sign_description: "Kid raised hand showing all five fingers open.",
                     sign_language: "asl"
                 };
-                
+
                 const resp = await fetch(`${API_BASE}/api/lms/quiz/evaluate-sign`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(reqData)
                 });
                 const data = await resp.json();
-                
-                if(data.success) {
+
+                if (data.success) {
                     slQuizResultModal({
                         score: data.score,
                         feedback: data.feedback,
@@ -587,7 +589,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         subject: subject,
                         chapterId: chapterId
                     });
-                    
+
                     // Save score
                     await fetch(`${API_BASE}/api/lms/progress`, {
                         method: 'POST',
@@ -599,10 +601,10 @@ document.addEventListener("DOMContentLoaded", () => {
                             quiz_score: data.score
                         })
                     });
-                    
+
                     loadProgressAndRender(); // refresh progress
                 }
-            } catch(e) {
+            } catch (e) {
                 console.error(e);
             }
         }, 1200);
@@ -626,7 +628,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // 2. Generate HTML Table Rows for each student
         const studentRows = mockStudents.map(student => {
             // Determine badge styling based on their performance status
-            let badgeBg = "#EFF6FF"; 
+            let badgeBg = "#EFF6FF";
             let badgeColor = "#1E3A8A"; // Default / On Track (Blue)
             if (student.status === "Excelling") { badgeBg = "#ECFDF5"; badgeColor = "#065F46"; } // Green
             if (student.status === "Needs Help") { badgeBg = "#FEF2F2"; badgeColor = "#991B1B"; } // Red
@@ -726,7 +728,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             rosterBody.innerHTML = studentsList.map(student => {
-                let badgeBg = "#EFF6FF"; 
+                let badgeBg = "#EFF6FF";
                 let badgeColor = "#1E3A8A";
                 if (student.status === "Excelling") { badgeBg = "#ECFDF5"; badgeColor = "#065F46"; }
                 if (student.status === "Needs Help") { badgeBg = "#FEF2F2"; badgeColor = "#991B1B"; }
@@ -759,8 +761,8 @@ document.addEventListener("DOMContentLoaded", () => {
         if (searchInput && rosterBody) {
             searchInput.addEventListener("input", (e) => {
                 const query = e.target.value.toLowerCase().trim();
-                const filtered = mockStudents.filter(student => 
-                    student.name.toLowerCase().includes(query) || 
+                const filtered = mockStudents.filter(student =>
+                    student.name.toLowerCase().includes(query) ||
                     student.id.toLowerCase().includes(query)
                 );
                 renderRows(filtered);
@@ -776,24 +778,40 @@ document.addEventListener("DOMContentLoaded", () => {
                         <h2>Parent Dashboard</h2>
                         <p style="color:var(--text-muted)">Welcome, ${STATE.user.name}.</p>
                     </div>
-                    <div>
-                        <button class="sl-btn sl-btn-outline">Manage Child Profiles</button>
+                    <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
+                        <button class="sl-btn sl-btn-primary" onclick="slOpenParentProgressModal()">📊 View Progress Summary</button>
+                        <button class="sl-btn sl-btn-outline" onclick="slToast('Profile management feature coming soon!', 'info')">Manage Child Profiles</button>
                     </div>
                 </div>
 
                 <div class="sl-grid-3">
                     <div class="sl-chapter-card" style="padding:1.5rem;">
-                        <h3>Screen Time Limits</h3>
-                        <p>Daily limit: 1.5 hours</p>
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⏳</div>
+                        <h3 style="font-size:1.2rem; font-weight:800; margin-bottom:0.4rem; color:var(--text-main);">Screen Time Limits</h3>
+                        <p style="color:var(--text-muted); margin-bottom:1rem;">Daily limit: 1.5 hours</p>
+                        <div style="background:#F1F5F9; border-radius:10px; padding:0.6rem 0.8rem; font-size:0.85rem; font-weight:600; color:var(--text-main);">
+                            Used Today: <span style="color:#4A90E2; font-weight:800;">45 mins</span> (45m remaining)
+                        </div>
                     </div>
+
                     <div class="sl-chapter-card" style="padding:1.5rem;">
-                        <h3>Weekly Report</h3>
-                        <p>Your child earned 12 stars this week!</p>
+                        <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⭐</div>
+                        <h3 style="font-size:1.2rem; font-weight:800; margin-bottom:0.4rem; color:var(--text-main);">Weekly Report</h3>
+                        <p style="color:var(--text-muted); margin-bottom:1rem;">Your child earned 12 stars this week!</p>
+                        <div style="background:#FFF9EC; border-radius:10px; padding:0.6rem 0.8rem; font-size:0.85rem; font-weight:600; color:#B45309;">
+                            Achievement: <span style="font-weight:800;">7-Day Study Streak 🔥</span>
+                        </div>
                     </div>
-                    <div class="sl-chapter-card" style="padding:1.5rem;">
-                        <h3>📊 Progress Summary</h3>
-                        <p>Track your child's learning journey across all subjects.</p>
-                        <button class="sl-btn sl-btn-secondary" style="margin-top:1rem; width:100%; justify-content:center;">View Details</button>
+
+                    <div class="sl-chapter-card" style="padding:1.5rem; display:flex; flex-direction:column; justify-content:space-between;">
+                        <div>
+                            <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
+                                <span style="font-size: 1.3rem;">📊</span>
+                                <h3 style="font-size:1.2rem; font-weight:800; margin:0; color:#1D2D44;">Progress Summary</h3>
+                            </div>
+                            <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.5; margin-bottom:1.5rem;">Track your child's learning journey across all subjects.</p>
+                        </div>
+                        <button class="sl-btn-progress-details" onclick="slOpenParentProgressModal()">View Details</button>
                     </div>
                 </div>
 
@@ -860,7 +878,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
-window.slExportPDF = function() {
+window.slExportPDF = function () {
     const mockStudents = [
         { id: "STU_01_122", name: "Aarav Sharma", progress: "88%", status: "On Track", lastActive: "Today" },
         { id: "STU_01_123", name: "Diya Patel", progress: "95%", status: "Excelling", lastActive: "Yesterday" },
@@ -879,7 +897,7 @@ window.slExportPDF = function() {
 
     doc.setFontSize(18);
     doc.text("SAMAVESH - Class Progress Report", 14, 22);
-    
+
     doc.setFontSize(11);
     doc.setTextColor(100);
     doc.text("Generated on: " + new Date().toLocaleDateString(), 14, 30);
@@ -902,7 +920,7 @@ window.slExportPDF = function() {
 
     doc.save("Samavesh_Class_Report.pdf");
 };
-window.slViewStudent = function(studentId) {
+window.slViewStudent = function (studentId) {
     const mockStudents = [
         { id: "STU_01_122", name: "Aarav Sharma", grade: "Grade 3", progress: "88%", status: "On Track", lastActive: "Today" },
         { id: "STU_01_123", name: "Diya Patel", grade: "Grade 3", progress: "95%", status: "Excelling", lastActive: "Yesterday" },
@@ -910,7 +928,7 @@ window.slViewStudent = function(studentId) {
         { id: "STU_01_125", name: "Ananya Iyer", grade: "Grade 3", progress: "72%", status: "On Track", lastActive: "Today" },
         { id: "STU_01_126", name: "Rohan Gupta", grade: "Grade 3", progress: "10%", status: "Inactive", lastActive: "1 week ago" }
     ];
-    
+
     const student = mockStudents.find(s => s.id === studentId);
     if (!student) return;
 
@@ -968,4 +986,254 @@ window.slViewStudent = function(studentId) {
     `;
 
     modal.style.display = "flex";
+};
+
+window.slOpenParentProgressModal = function () {
+    let modal = document.getElementById("slParentProgressModal");
+    if (!modal) {
+        modal = document.createElement("div");
+        modal.id = "slParentProgressModal";
+        modal.className = "sl-modal-overlay";
+        modal.style.display = "none";
+        document.body.appendChild(modal);
+    }
+
+    const mockData = {
+        childName: "Aarav Sharma",
+        grade: "Grade 1 • Section B",
+        studentId: "STU_01_122",
+        school: "Delhi Public School, Primary Wing",
+        overallProgress: 88,
+        totalTime: "14h 35m",
+        quizzesPassed: "12 / 15",
+        starsEarned: 48,
+        streakDays: 7,
+        teacherName: "Mrs. Radhika Sharma",
+        subjects: [
+            { name: "📐 Mathematics", progress: 88, color: "#4A90E2", detail: "8 / 9 Lessons completed • Quiz avg score 92%" },
+            { name: "📚 English Language", progress: 92, color: "#FF9F1C", detail: "9 / 9 Lessons completed • Quiz avg score 95%" },
+            { name: "🔬 Environmental Science", progress: 75, color: "#8338EC", detail: "6 / 9 Lessons completed • Quiz avg score 80%" },
+            { name: "👋 Indian Sign Language", progress: 95, color: "#06D6A0", detail: "10 / 10 Lessons completed • Quiz avg score 98%" }
+        ],
+        recentMilestones: [
+            { icon: "🏆", title: "Mastered ISL Alphabet Signs", date: "Yesterday, 4:30 PM", badge: "100% Score" },
+            { icon: "⭐", title: "Completed Math Chapter 2 Quiz", date: "3 days ago", badge: "+10 Stars" },
+            { icon: "🔥", title: "Achieved 7-Day Daily Study Streak", date: "Active Now", badge: "On Fire" }
+        ],
+        teacherNote: "Aarav is excelling in Sign Language and Mathematics! He actively participates in practice modules. We recommend continuing 15 minutes of daily Science practice."
+    };
+
+    modal.innerHTML = `
+        <div class="sl-progress-popup-card">
+            <button class="sl-modal-close" onclick="document.getElementById('slParentProgressModal').style.display='none'">✕</button>
+
+            <!-- Header Profile -->
+            <div style="display:flex; align-items:center; gap:1.2rem; margin-bottom:1.5rem; padding-bottom:1rem; border-bottom:1px solid #E2E8F0;">
+                <div class="sl-avatar-circle" style="width:58px; height:58px; font-size:1.6rem; font-weight:900; background:linear-gradient(135deg, #06D6A0, #4A90E2); color:white; flex-shrink:0;">
+                    ${mockData.childName.charAt(0)}
+                </div>
+                <div style="flex:1;">
+                    <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+                        <h2 style="font-size:1.5rem; font-weight:900; color:var(--text-main); margin:0;">${mockData.childName}</h2>
+                        <span style="background:#ECFDF5; color:#06D6A0; font-weight:800; font-size:0.8rem; padding:0.25rem 0.75rem; border-radius:50px; border:1px solid #A7F3D0;">
+                            Status: Excelling
+                        </span>
+                    </div>
+                    <p style="color:var(--text-muted); margin:0.2rem 0 0 0; font-size:0.88rem; font-weight:600;">
+                        ${mockData.grade} | ID: <span style="color:var(--text-main); font-weight:700;">${mockData.studentId}</span>
+                    </p>
+                </div>
+            </div>
+
+            <!-- Title & Subtitle -->
+            <div style="margin-bottom:1.5rem;">
+                <h3 style="font-size:1.25rem; font-weight:800; color:var(--text-main); margin:0 0 0.3rem 0; display:flex; align-items:center; gap:0.5rem;">
+                    📊 Child Progress Summary
+                </h3>
+                <p style="color:var(--text-muted); font-size:0.9rem; margin:0; line-height:1.5;">
+                    Comprehensive overview of learning activity, subject mastery, and teacher feedback.
+                </p>
+            </div>
+
+            <!-- Stats Bar -->
+            <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.8rem;">
+                <div class="sl-progress-stat-pill">
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Overall Progress</div>
+                    <div style="font-size:1.35rem; font-weight:900; color:#06D6A0; margin-top:0.2rem;">${mockData.overallProgress}%</div>
+                </div>
+                <div class="sl-progress-stat-pill">
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Study Time</div>
+                    <div style="font-size:1.35rem; font-weight:900; color:#4A90E2; margin-top:0.2rem;">${mockData.totalTime}</div>
+                </div>
+                <div class="sl-progress-stat-pill">
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Quizzes Passed</div>
+                    <div style="font-size:1.35rem; font-weight:900; color:#8338EC; margin-top:0.2rem;">${mockData.quizzesPassed}</div>
+                </div>
+                <div class="sl-progress-stat-pill">
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Stars & Streak</div>
+                    <div style="font-size:1.35rem; font-weight:900; color:#FF9F1C; margin-top:0.2rem;">⭐ ${mockData.starsEarned} (${mockData.streakDays}d 🔥)</div>
+                </div>
+            </div>
+
+            <!-- Subject Progress List -->
+            <div style="margin-bottom:1.8rem;">
+                <h4 style="font-size:1rem; font-weight:800; color:var(--text-main); margin:0 0 1rem 0;">Subject Performance Breakdown</h4>
+                <div style="display:flex; flex-direction:column; gap:0.85rem;">
+                    ${mockData.subjects.map(subj => `
+                        <div style="background:#F8FAFC; border:1px solid #E2E8F0; padding:0.9rem 1.1rem; border-radius:16px;">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.3rem;">
+                                <span style="font-weight:800; font-size:0.92rem; color:var(--text-main);">${subj.name}</span>
+                                <span style="font-weight:900; font-size:0.92rem; color:${subj.color};">${subj.progress}%</span>
+                            </div>
+                            <div class="sl-progress-bar-track">
+                                <div class="sl-progress-bar-fill" style="width:${subj.progress}%; background:${subj.color};"></div>
+                            </div>
+                            <div style="font-size:0.78rem; color:var(--text-muted); margin-top:0.4rem; font-weight:600;">${subj.detail}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+
+            <!-- Recent Milestones & Teacher Note Grid -->
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:1rem; margin-bottom:1.8rem;">
+                <div style="background:#FFF9EC; border:1px solid #FDE68A; border-radius:16px; padding:1.1rem;">
+                    <h4 style="font-size:0.92rem; font-weight:800; color:#B45309; margin:0 0 0.8rem 0; display:flex; align-items:center; gap:0.4rem;">
+                        🏆 Recent Achievements
+                    </h4>
+                    <div style="display:flex; flex-direction:column; gap:0.5rem;">
+                        ${mockData.recentMilestones.map(m => `
+                            <div style="display:flex; align-items:center; justify-content:space-between; font-size:0.82rem;">
+                                <div>
+                                    <span style="margin-right:0.3rem;">${m.icon}</span>
+                                    <strong style="color:var(--text-main);">${m.title}</strong>
+                                </div>
+                                <span style="background:#FEF3C7; color:#92400E; font-size:0.72rem; font-weight:700; padding:0.1rem 0.5rem; border-radius:10px;">${m.badge}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+
+                <div style="background:#F0F9FF; border:1px solid #BAE6FD; border-radius:16px; padding:1.1rem;">
+                    <h4 style="font-size:0.92rem; font-weight:800; color:#0369A1; margin:0 0 0.5rem 0; display:flex; align-items:center; gap:0.4rem;">
+                        📝 Teacher's Remark (${mockData.teacherName})
+                    </h4>
+                    <p style="font-size:0.83rem; color:#1E293B; line-height:1.5; margin:0; font-style:italic;">
+                        "${mockData.teacherNote}"
+                    </p>
+                </div>
+            </div>
+
+            <!-- Footer Actions -->
+            <div style="display:flex; gap:0.8rem; flex-wrap:wrap; border-top:1px solid #E2E8F0; padding-top:1.2rem;">
+                <button class="sl-btn sl-btn-primary" style="flex:1; justify-content:center; gap:0.5rem; font-size:0.9rem;" onclick="slExportChildPDF()">
+                    📄 Export PDF Report
+                </button>
+                <button class="sl-btn sl-btn-outline" style="flex:1; justify-content:center; gap:0.5rem; font-size:0.9rem;" onclick="slToast('Message sent to Mrs. Radhika Sharma!', 'success')">
+                    💬 Contact Teacher
+                </button>
+                <button class="sl-btn sl-btn-outline" style="justify-content:center; padding:0.8rem 1.2rem; font-size:0.9rem;" onclick="document.getElementById('slParentProgressModal').style.display='none'">
+                    Close
+                </button>
+            </div>
+        </div>
+    `;
+
+    modal.style.display = "flex";
+};
+
+window.slExportChildPDF = function (customChildData) {
+    if (!window.jspdf) {
+        slToast("PDF library is still loading. Please try again in a moment.", "warning");
+        return;
+    }
+
+    const childData = customChildData || {
+        name: "Aarav Sharma",
+        grade: "Grade 1 • Section B",
+        studentId: "STU_01_122",
+        school: "Delhi Public School, Primary Wing",
+        overallProgress: "88%",
+        totalTime: "14h 35m",
+        quizzesPassed: "12 / 15",
+        starsEarned: "48 Stars (7-day Streak)",
+        teacherName: "Mrs. Radhika Sharma",
+        teacherNote: "Aarav is excelling in Sign Language and Mathematics! He actively participates in practice modules. We recommend continuing 15 minutes of daily Science practice.",
+        subjects: [
+            { name: "Mathematics", progress: "88%", detail: "8 / 9 Lessons completed", quizScore: "92%" },
+            { name: "English Language", progress: "92%", detail: "9 / 9 Lessons completed", quizScore: "95%" },
+            { name: "Environmental Science", progress: "75%", detail: "6 / 9 Lessons completed", quizScore: "80%" },
+            { name: "Indian Sign Language", progress: "95%", detail: "10 / 10 Lessons completed", quizScore: "98%" }
+        ]
+    };
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    // Document Header
+    doc.setFontSize(20);
+    doc.setTextColor(74, 144, 226);
+    doc.text("SAMAVESH — Child Learning Progress Report", 14, 20);
+
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Generated on: ${new Date().toLocaleDateString()} | Parent Portal Record`, 14, 27);
+
+    // Divider
+    doc.setDrawColor(226, 232, 240);
+    doc.line(14, 31, 196, 31);
+
+    // Student Metadata Box
+    doc.setFontSize(12);
+    doc.setTextColor(29, 45, 68);
+    doc.text(`Student Name: ${childData.name}`, 14, 40);
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Student ID: ${childData.studentId}   |   Grade: ${childData.grade}`, 14, 47);
+    doc.text(`School: ${childData.school}`, 14, 53);
+
+    // Summary Highlights Cards Table
+    doc.autoTable({
+        head: [["Overall Progress", "Total Study Time", "Quizzes Passed", "Stars & Streak"]],
+        body: [[childData.overallProgress, childData.totalTime, childData.quizzesPassed, childData.starsEarned]],
+        startY: 59,
+        theme: 'grid',
+        headStyles: { fillColor: [6, 214, 160], textColor: [255, 255, 255], fontStyle: 'bold' },
+        styles: { fontSize: 10, halign: 'center' }
+    });
+
+    // Subject Breakdown Table
+    doc.setFontSize(12);
+    doc.setTextColor(29, 45, 68);
+    let currentY = doc.lastAutoTable.finalY + 12;
+    doc.text("Subject Performance Breakdown", 14, currentY);
+
+    const subjectRows = childData.subjects.map(s => [s.name, s.detail, s.quizScore, s.progress]);
+    doc.autoTable({
+        head: [["Subject", "Lessons Completed", "Quiz Avg Score", "Overall Progress"]],
+        body: subjectRows,
+        startY: currentY + 4,
+        theme: 'striped',
+        headStyles: { fillColor: [74, 144, 226] },
+        styles: { fontSize: 9.5 }
+    });
+
+    // Teacher Note Box
+    currentY = doc.lastAutoTable.finalY + 12;
+    doc.setFontSize(11);
+    doc.setTextColor(29, 45, 68);
+    doc.text(`Teacher's Remark (${childData.teacherName}):`, 14, currentY);
+
+    doc.setFontSize(9.5);
+    doc.setTextColor(70, 80, 95);
+    const splitNote = doc.splitTextToSize(`"${childData.teacherNote}"`, 180);
+    doc.text(splitNote, 14, currentY + 7);
+
+    // Footer
+    doc.setFontSize(8);
+    doc.setTextColor(150);
+    doc.text("SAMAVESH LMS — Empowering inclusive learning through Sign Language.", 14, 285);
+
+    const filename = `${childData.name.replace(/\s+/g, '_')}_Progress_Report.pdf`;
+    doc.save(filename);
+    if (window.slToast) slToast("Child progress report PDF generated!", "success");
 };
