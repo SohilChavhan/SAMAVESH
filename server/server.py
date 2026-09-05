@@ -208,7 +208,7 @@ STOPWORDS = {
     "en": {
         "a","an","the","and","or","but","if","then","than",
         "of","to","in","on","at","for","from","with","as","by","is","are","am",
-        "be","been","was","were","do","does","did","it","that","this","those","these",
+        "be","been","was","were","do","does","did","it","its","that","this","those","these",
     },
     "de": {
         "der","die","das","ein","eine","einem","einen","einer",
@@ -216,7 +216,7 @@ STOPWORDS = {
         "über","unter","nach","bei","zwischen",
         "ist","sind","bin","war","waren",
         "dass","ob","da",
-        "dies","jene",
+        "dies","jene","es","sein","seine",
         "mein","dein","unser",
         "sehr","nur","so","wie",
     },
@@ -238,7 +238,7 @@ STOPWORDS = {
     },
     "pl": {
         "i","a","ale","lub","czy","że",
-        "to","ten","ta","te",
+        "to","ten","ta","te","ono",
         "w","na","z","do","od","po","za","o","przy","nad","pod","przed",
         "jest","są","był","była","było","być",
         "się","go","mu",
@@ -392,32 +392,47 @@ def get_greeting_starters(lang: str) -> set:
 
 PRONOUNS = {
     "en": {
-        "keep": {"you","we","they","them","us","my","your","our","their","not"},
+        "keep": {
+            "you","we","they","them","us","my","your","our","their","not",
+            "myself","yourself","yourselves","himself","herself","itself","ourselves","themselves",
+            "someone","somebody","anyone","anybody","everyone","everybody",
+            "no one","nobody","something","anything","everything","nothing",
+            "mine","yours","his","hers","theirs","whom","whose",
+            "both","each","either","neither","all","any","some","none"
+        },
         "normalize": {
             "i": "me", "me": "me",
-            "he": "he", "him": "he", "she": "he", "it": "he",
-            "her": "he", "his": "his", "its": "his",
+            "he": "he", "him": "he", "she": "he",
+            "her": "he", "his": "his",
             "n't": "not",
         },
     },
     "de": {
-        "keep": {"du","wir","ihr","uns",
-                 "nicht","nichts",
-                 "und","oder","aber","wenn","weil"},
+        "keep": {
+            "du","wir","ihr","uns",
+            "nicht","nichts",
+            "und","oder","aber","wenn","weil",
+            "selbst","sich","einander",
+            "jemand","niemand","etwas","alle","alles","jeder","jedes"
+        },
         "normalize": {
             "ich": "ich", "mich": "ich", "mir": "ich",
             "er": "er", "ihn": "er", "ihm": "er",
-            "sie": "er", "es": "er",
+            "sie": "er",
             "dich": "du", "dir": "du",
             "euch": "ihr",
             "ihnen": "ihnen",
         },
     },
     "fr": {
-        "keep": {"tu","nous","vous","moi","toi",
-                 "mon","ma","mes","ton","ta","tes","son","sa","ses",
-                 "notre","votre","leur","pas","très","plus","moins",
-                 "et","ou","mais"},
+        "keep": {
+            "tu","nous","vous","moi","toi",
+            "mon","ma","mes","ton","ta","tes","son","sa","ses",
+            "notre","votre","leur","pas","très","plus","moins",
+            "et","ou","mais",
+            "soi","soi-même","lui-même","elle-même","eux-mêmes","elles-mêmes","moi-même","toi-même",
+            "quelqu'un","personne","rien","tout","tous","chacun"
+        },
         "normalize": {
             "je": "moi", "j'": "moi",
             "il": "il", "lui": "il",
@@ -428,18 +443,25 @@ PRONOUNS = {
         },
     },
     "es": {
-        "keep": {"tú","nosotros","ellos","ellas","él","ella","usted","ustedes","mí","ti"},
+        "keep": {
+            "tú","nosotros","ellos","ellas","él","ella","usted","ustedes","mí","ti",
+            "mismo","misma","mismos","mismas","alguien","nadie","algo","nada","todos","todo","cada"
+        },
         "normalize": {"yo": "yo"},
     },
     "pl": {
-        "keep": {"ja","ty","my","wy","oni","one","on",
-                 "mój","twój","nasz","wasz","jego","jej","ich",
-                 "nie","nic","nikt"},
+        "keep": {
+            "ja","ty","my","wy","oni","one","on",
+            "mój","twój","nasz","wasz","jego","jej","ich",
+            "nie","nic","nikt",
+            "siebie","sobie","sobą","sam","sama","samo","sami",
+            "ktoś","coś","wszyscy","wszystko","każdy"
+        },
         "normalize": {
             "ja": "ja", "mnie": "ja", "mi": "ja", "mną": "ja",
             "ciebie": "ty", "ci": "ty", "tobą": "ty",
             "jemu": "on", "nim": "on",
-            "ona": "on", "ono": "on",
+            "ona": "on",
             "nią": "on", "niej": "on",
             "nas": "my", "nami": "my", "nam": "my",
             "was": "wy", "wami": "wy", "wam": "wy",
@@ -447,9 +469,12 @@ PRONOUNS = {
         },
     },
     "nl": {
-        "keep": {"jij","wij","hij","ons","u",
-                 "mijn","jouw","dit","deze",
-                 "maar","of","ook","nog","wel","meer","minder","zeer"},
+        "keep": {
+            "jij","wij","hij","ons","u",
+            "mijn","jouw","dit","deze",
+            "maar","of","ook","nog","wel","meer","minder","zeer",
+            "zich","zelf","iemand","niemand","iets","niets","iedereen","allemaal"
+        },
         "normalize": {
             "ik": "ik", "mij": "ik", "me": "ik",
             "je": "jij", "jou": "jij",
@@ -461,7 +486,10 @@ PRONOUNS = {
         },
     },
     "el": {
-        "keep": {"εσύ","εμείς","εσείς","αυτός","αυτή","αυτοί","αυτές","εμένα","εσένα"},
+        "keep": {
+            "εσύ","εμείς","εσείς","αυτός","αυτή","αυτοί","αυτές","εμένα","εσένα",
+            "μόνος","μόνη","μόνο","κάποιος","κανείς","τίποτα","όλοι","όλα"
+        },
         "normalize": {"εγώ": "εγώ"},
     },
 }
@@ -651,6 +679,9 @@ def process_sentence(doc_or_span, stopwords: set, time_words: set, pronouns: dic
         pos = token.pos_
 
         if len(text) == 1 and text.isalpha():
+            if text in stopwords:
+                j += 1
+                continue
             tokens_with_pos.append((text, pos))
             j += 1
             continue
@@ -673,8 +704,14 @@ def process_sentence(doc_or_span, stopwords: set, time_words: set, pronouns: dic
                     candidate = text
             else:
                 candidate = text
+        elif pos == "PRON" and text not in stopwords:
+            candidate = text
 
-        if not candidate or candidate in stopwords:
+        if not candidate:
+            j += 1
+            continue
+
+        if pos != "VERB" and candidate in stopwords:
             j += 1
             continue
 

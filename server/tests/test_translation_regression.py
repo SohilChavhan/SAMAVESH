@@ -207,7 +207,7 @@ def test_missing_word_returns_empty_or_original() -> None:
 def test_no_sigml_file_contains_object_literal() -> None:
     """Defence in depth: no .sigml file should literally contain [object Object]."""
     for path in sorted(DATA_DIR.glob("*.sigml")):
-        text = path.read_text()
+        text = path.read_text(encoding="utf-8", errors="replace")
         assert "[object Object]" not in text, (
             f"{path.name} contains literal [object Object] — someone serialised "
             "a JS object into a database entry"

@@ -3856,6 +3856,20 @@
   	</hamnosys_manual>
   </hns_sign>
 
+  <hns_sign gloss="round">
+  	<hamnosys_nonmanual>
+  	</hamnosys_nonmanual>
+  	<hamnosys_manual>
+  		<hamfinger2 />
+  		<hamthumbacrossmod />
+  		<hamextfingero />
+  		<hampalmd />
+  		<hamshoulders />
+  		<hamcircleo />
+  		<hamlargemod />
+  	</hamnosys_manual>
+  </hns_sign>
+
   <hns_sign gloss="circus">
   	<hamnosys_nonmanual>
   	</hamnosys_nonmanual>

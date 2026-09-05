@@ -185,13 +185,50 @@ body {
   font-size: 1.1rem;
 }
 
+/* Landing Page View - Continuous Constant Background */
+#slLandingView {
+  position: relative;
+  background-color: #0a1628;
+  color: #FFFFFF;
+  min-height: 100vh;
+}
+
+#slLandingView::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: url('/india-bg.jpeg') center center / cover no-repeat;
+  filter: brightness(0.5);
+  z-index: 0;
+  pointer-events: none;
+}
+
+#slLandingView::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: linear-gradient(180deg, rgba(10,22,40,0.35) 0%, rgba(10,22,40,0.65) 100%);
+  z-index: 0;
+  pointer-events: none;
+}
+
+#slLandingView > * {
+  position: relative;
+  z-index: 1;
+}
+
 /* Hero Section */
 .sl-hero {
-  background: linear-gradient(180deg, #EBF5FF 0%, #F4F9FF 100%);
-  padding: 4rem 1.5rem;
+  padding: 4rem 1.5rem 2rem;
   text-align: center;
   position: relative;
-  overflow: hidden;
+  background: transparent;
 }
 
 .sl-hero-container {
@@ -217,16 +254,18 @@ body {
 .sl-hero h1 {
   font-size: 3rem;
   font-weight: 900;
-  color: var(--text-main);
+  color: #FFFFFF;
   margin-bottom: 1.2rem;
   line-height: 1.2;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.4);
 }
 
 .sl-hero p {
   font-size: 1.3rem;
-  color: var(--text-muted);
+  color: rgba(255,255,255,0.85);
   max-width: 680px;
   margin: 0 auto 2.5rem;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
 
 .sl-hero-ctas {
@@ -316,10 +355,9 @@ body {
 .sl-section-divider {
   border: 0;
   height: 1px;
-  background: linear-gradient(90deg, transparent 0%, #CBD5E1 30%, #CBD5E1 70%, transparent 100%);
+  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.25) 30%, rgba(255,255,255,0.25) 70%, transparent 100%);
   max-width: 480px;
-  margin: 1.5rem auto;
-  opacity: 0.6;
+  margin: 2rem auto;
 }
 
 .sl-section-title {
@@ -330,12 +368,14 @@ body {
 .sl-section-title h2 {
   font-size: 2.2rem;
   font-weight: 800;
-  color: var(--text-main);
+  color: #FFFFFF;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
 
 .sl-section-title p {
   font-size: 1.1rem;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.85);
+  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
 }
 
 .sl-grid-3 {
@@ -349,14 +389,15 @@ body {
   border-radius: var(--radius-md);
   padding: 2rem;
   text-align: center;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
   border: 2px solid #EBF3FA;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  color: var(--text-main);
 }
 
 .sl-step-card:hover {
   transform: translateY(-5px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
   border-color: var(--primary);
 }
 
@@ -378,6 +419,7 @@ body {
 .sl-step-card h3 {
   font-size: 1.3rem;
   font-weight: 800;
+  color: var(--text-main);
   margin-bottom: 0.75rem;
 }
 
@@ -393,9 +435,10 @@ body {
   padding: 2rem;
   display: flex;
   flex-direction: column;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
   border: 3px solid transparent;
   transition: all 0.2s ease;
+  color: var(--text-main);
 }
 
 .sl-subject-card.maths { border-color: #FFE5A3; }
@@ -405,7 +448,7 @@ body {
 
 .sl-subject-card:hover {
   transform: translateY(-6px);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
 }
 
 .sl-subject-header {
@@ -428,6 +471,7 @@ body {
 .sl-subject-card h3 {
   font-size: 1.5rem;
   font-weight: 800;
+  color: var(--text-main);
 }
 
 .sl-subject-card p {
@@ -479,8 +523,9 @@ body {
   background: #FFFFFF;
   border-radius: var(--radius-lg);
   padding: 3rem;
-  box-shadow: var(--shadow-sm);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
   border: 2px solid #EBF3FA;
+  color: var(--text-main);
 }
 
 .sl-parents-grid {
@@ -524,7 +569,9 @@ body {
 
 /* Footer */
 .sl-footer {
-  background: #111827;
+  background: rgba(10, 22, 40, 0.95);
+  backdrop-filter: blur(10px);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   color: #9CA3AF;
   padding: 3rem 1.5rem 2rem;
   text-align: center;

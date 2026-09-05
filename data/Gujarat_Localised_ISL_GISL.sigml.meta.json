@@ -1,0 +1,17 @@
+{
+  "version": 1,
+  "language": "gisl",
+  "source": "Gujarat-Localised ISL (G-ISL) — Gujarati Consonant Signs",
+  "source_kind": "community",
+  "sigml_file": "Gujarat_Localised_ISL_GISL.sigml",
+  "default_review": {
+    "deaf_native_reviewed": false,
+    "reviewer_count": 0,
+    "reviewer_language_match": false,
+    "review_source": null,
+    "last_reviewed": null,
+    "notes": "community-contributed, pending review"
+  },
+  "sign_count": 36,
+  "signs": {}
+}

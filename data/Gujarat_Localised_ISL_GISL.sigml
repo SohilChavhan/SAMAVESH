@@ -234,4 +234,26 @@
       <hampalmu/>
     </hamnosys_manual>
   </hns_sign>
+  <hns_sign gloss="round">
+    <hamnosys_manual>
+      <hamfinger2/>
+      <hamthumbacrossmod/>
+      <hamextfingero/>
+      <hampalmd/>
+      <hamshoulders/>
+      <hamcircleo/>
+      <hamlargemod/>
+    </hamnosys_manual>
+  </hns_sign>
+  <hns_sign gloss="ગોળ">
+    <hamnosys_manual>
+      <hamfinger2/>
+      <hamthumbacrossmod/>
+      <hamextfingero/>
+      <hampalmd/>
+      <hamshoulders/>
+      <hamcircleo/>
+      <hamlargemod/>
+    </hamnosys_manual>
+  </hns_sign>
 </sigml>
