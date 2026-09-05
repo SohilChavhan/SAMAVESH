@@ -24,7 +24,7 @@ PUBLIC_DIR = REPO_ROOT / "public"
 DATA_DIR = REPO_ROOT / "data"
 
 
-_SUPPORTED_BASE_LANGS = {"en", "fr", "de", "es", "pl", "nl", "el", "ru", "ar"}
+_SUPPORTED_BASE_LANGS = {"en", "fr", "de", "es", "pl", "nl", "el", "ru", "ar", "gu"}
 _SUPPORTED_SIGN_LANGS = {
     "bsl", "asl", "dgs", "lsf", "lse", "pjm", "gsl", "rsl",
     "algerian", "bangla", "ngt", "fsl", "isl", "kurdish", "vsl", "gisl", "gjsl",

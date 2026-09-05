@@ -54,7 +54,10 @@ var SIGN_LANG_LABELS = {
 };
 
 function glossBase(gloss) {
-  return String(gloss).toLowerCase().replace(/\(.*?\)/g,'').replace(/#\d+$/g,'').replace(/\d+[a-z]?\^?$/g,'').replace(/^_num-/g,'').replace(/_\(.*?\)/g,'').replace(/[^a-z0-9À-ɏͰ-ϿЀ-ӿĀ-ſ]+/g,' ').trim();
+  let str = String(gloss).toLowerCase().replace(/\(.*?\)/g,'').replace(/#\d+$/g,'').replace(/^_num-/g,'').replace(/_\(.*?\)/g,'');
+  let noNum = str.replace(/\d+[a-z]?\^?$/g,'');
+  if (!noNum) noNum = str;
+  return noNum.replace(/[^a-z0-9À-ɏͰ-ϿЀ-ӿĀ-ſ]+/g,' ').trim();
 }
 
 function loadSigmlXml(xmlText) {

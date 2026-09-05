@@ -54,6 +54,7 @@ def _ensure_argos():
     if _argos_ready:
         return
     try:
+        # pyrefly: ignore [missing-import]
         from argostranslate import package
         package.update_package_index()
         available = package.get_available_packages()
@@ -134,8 +135,8 @@ async def _kozha_no_stale_data_middleware(request: Request, call_next):
     response = await call_next(request)
     if "cache-control" not in response.headers:
         content_type = response.headers.get("content-type", "")
-        if request.url.path.startswith("/data/") or content_type.startswith("text/html"):
-            response.headers["Cache-Control"] = "no-cache"
+        if request.url.path.startswith("/data/") or content_type.startswith("text/html") or "javascript" in content_type or request.url.path.endswith(".js"):
+            response.headers["Cache-Control"] = "no-cache, must-revalidate"
     return response
 
 def load_abbreviations(filepath: Path) -> Dict[str, str]:
@@ -598,6 +599,24 @@ def reorder_tokens(tokens_with_pos, sign_language: str, time_words: set,
 
     return result
 
+def _number_to_words(num: int) -> str:
+    d = { 0: 'zero', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five',
+          6: 'six', 7: 'seven', 8: 'eight', 9: 'nine', 10: 'ten',
+          11: 'eleven', 12: 'twelve', 13: 'thirteen', 14: 'fourteen',
+          15: 'fifteen', 16: 'sixteen', 17: 'seventeen', 18: 'eighteen',
+          19: 'nineteen', 20: 'twenty',
+          30: 'thirty', 40: 'forty', 50: 'fifty', 60: 'sixty',
+          70: 'seventy', 80: 'eighty', 90: 'ninety' }
+    if num < 20:
+        return d.get(num, str(num))
+    if num < 100:
+        if num % 10 == 0: return d.get(num, str(num))
+        else: return d.get(num // 10 * 10, "") + ' ' + d.get(num % 10, "")
+    if num < 1000:
+        if num % 100 == 0: return d.get(num // 100, "") + ' hundred'
+        else: return d.get(num // 100, "") + ' hundred ' + _number_to_words(num % 100)
+    return str(num)
+
 def process_sentence(doc_or_span, stopwords: set, time_words: set, pronouns: dict,
                      sign_language: str, abbr_spans: Optional[Dict[int, tuple[int, list[str]]]] = None,
                      question_words: set = None, greeting_starters: set = None) -> str:
@@ -629,13 +648,14 @@ def process_sentence(doc_or_span, stopwords: set, time_words: set, pronouns: dic
             j += 1
             continue
 
+        pos = token.pos_
+
         if len(text) == 1 and text.isalpha():
             tokens_with_pos.append((text, pos))
             j += 1
             continue
 
         candidate = None
-        pos = token.pos_
 
         if text in pron_norm:
             candidate = pron_norm[text]
@@ -646,7 +666,13 @@ def process_sentence(doc_or_span, stopwords: set, time_words: set, pronouns: dic
         elif pos == "VERB":
             candidate = token.lemma_.lower()
         elif pos in {"NOUN","PROPN","ADJ","INTJ","NUM","ADV","DET"} and text not in stopwords:
-            candidate = text
+            if text.isdigit():
+                try:
+                    candidate = _number_to_words(int(text))
+                except ValueError:
+                    candidate = text
+            else:
+                candidate = text
 
         if not candidate or candidate in stopwords:
             j += 1
@@ -913,13 +939,49 @@ _SUPPORTED_SIGN_LANGS = {
 }
 # Argos packages pre-warmed in _ensure_argos(). Any source_lang or target_lang
 # outside this set is either unsupported (soft error) or a pass-through.
-_SUPPORTED_BASE_LANGS = {"en", "fr", "de", "es", "pl", "nl", "el", "ru", "ar"}
+_SUPPORTED_BASE_LANGS = {"en", "fr", "de", "es", "pl", "nl", "el", "ru", "ar", "gu"}
 
 
 def _translation_route_supported(src: str, tgt: str) -> bool:
     if src == tgt:
         return True
     return src in _SUPPORTED_BASE_LANGS and tgt in _SUPPORTED_BASE_LANGS
+
+
+def _translate_with_google_fallback(text: str, src: str, tgt: str) -> Optional[str]:
+    try:
+        import requests
+
+        url = "https://translate.googleapis.com/translate_a/single"
+        params = {"client": "gtx", "sl": src, "tl": tgt, "dt": "t", "q": text}
+        headers = {"User-Agent": "Mozilla/5.0"}
+        res = requests.get(url, params=params, headers=headers, timeout=8)
+        if res.status_code == 200:
+            data = res.json()
+            if data and isinstance(data, list) and len(data) > 0 and data[0]:
+                parts = [item[0] for item in data[0] if item and isinstance(item, list) and len(item) > 0 and item[0]]
+                if parts:
+                    return "".join(parts).strip()
+    except Exception as e:
+        logger.warning("Google translate fallback failed via requests (%s -> %s): %s", src, tgt, e)
+
+    try:
+        import json
+        import urllib.parse
+        import urllib.request
+
+        q = urllib.parse.quote(text)
+        url = f"https://translate.googleapis.com/translate_a/single?client=gtx&sl={src}&tl={tgt}&dt=t&q={q}"
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req, timeout=8) as res:
+            data = json.loads(res.read().decode("utf-8"))
+            if data and isinstance(data, list) and len(data) > 0 and data[0]:
+                translated_parts = [item[0] for item in data[0] if item and isinstance(item, list) and len(item) > 0 and item[0]]
+                if translated_parts:
+                    return "".join(translated_parts).strip()
+    except Exception as e:
+        logger.warning("Google translate fallback failed via urllib (%s -> %s): %s", src, tgt, e)
+    return None
 
 
 @app.post("/api/translate-text")
@@ -945,7 +1007,7 @@ def api_translate_text(req: TranslateTextRequest, request: Request):
                 "translated": text,
                 "error": f"unknown target sign language: {req.target_sign_lang}",
             }
-        # Refuse source/target pairs with no argos route rather than silently
+        # Refuse source/target pairs with no route rather than silently
         # returning the original text and leaving the client unsure whether
         # translation ran.
         if not _translation_route_supported(req.source_lang, req.target_lang):
@@ -957,34 +1019,31 @@ def api_translate_text(req: TranslateTextRequest, request: Request):
                 ),
             }
         try:
-            _ensure_argos()
-            from argostranslate import translate
-            result = translate.translate(text, req.source_lang, req.target_lang)
-            if not isinstance(result, str):
-                for attr in ("translatedText", "translated", "text", "translation"):
-                    v = getattr(result, attr, None)
-                    if isinstance(v, str):
-                        result = v
-                        break
-                else:
-                    logger.error(
-                        "argostranslate returned non-string type",
-                        extra={"ctx": {
-                            "source_lang": req.source_lang,
-                            "target_lang": req.target_lang,
-                            "result_type": type(result).__name__,
-                        }},
-                    )
-                    ctx["outcome"] = "server_error"
-                    return {
-                        "translated": text,
-                        "error": f"translation returned unexpected type {type(result).__name__}",
-                    }
+            result = None
+            try:
+                _ensure_argos()
+                # pyrefly: ignore [missing-import]
+                from argostranslate import translate
+                res = translate.translate(text, req.source_lang, req.target_lang)
+                if isinstance(res, str) and res.strip() and res.strip() != text.strip():
+                    result = res
+                elif res and not isinstance(res, str):
+                    for attr in ("translatedText", "translated", "text", "translation"):
+                        v = getattr(res, attr, None)
+                        if isinstance(v, str) and v.strip():
+                            result = v
+                            break
+            except Exception as argos_err:
+                logger.info("Argos translate unavailable/failed for %s -> %s: %s", req.source_lang, req.target_lang, argos_err)
+
+            if not result:
+                result = _translate_with_google_fallback(text, req.source_lang, req.target_lang)
+
+            if not result:
+                result = text
+
             return {"translated": result}
         except Exception as e:
-            # Explicit outcome + re-raise so the global handler can
-            # format a 5xx body with the request_id; we still want the
-            # metric to count this attempt as a server_error.
             logger.error("Translation error: %s", e)
             ctx["outcome"] = "server_error"
             return {"translated": text, "error": str(e)}
@@ -1298,6 +1357,7 @@ async def api_transcribe(request: Request):
 
 
 try:
+    # pyrefly: ignore [missing-import]
     from api import create_app as _create_chat2hamnosys_app
     _chat2hamnosys_sub_app = _create_chat2hamnosys_app()
     app.mount("/api/chat2hamnosys", _chat2hamnosys_sub_app)

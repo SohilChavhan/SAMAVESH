@@ -23,7 +23,7 @@
     lse: 'es', pjm: 'pl', gsl: 'el', rsl: 'ru',
     algerian: null, bangla: 'en', ngt: 'nl', fsl: null,
     isl: 'en', kurdish: 'ku', vsl: 'en', ksl: 'kk',
-    gisl: 'gu'
+    gisl: 'en'
   };
 
   const SIGN_LANG_DB = {
@@ -88,21 +88,15 @@
 
   const ARGOS_SUPPORTED = new Set(['en','fr','de','es','pl','nl','el','ru','ar','gu']);
 
-  // Languages shown in the LMS source-language dropdown
+  // Languages shown in the LMS source-language dropdown (only English and Gujarati)
   const LMS_SOURCE_LANGS = [
     { code: 'en', label: 'English' },
-    { code: 'hi', label: 'Hindi' },
-    { code: 'gu', label: 'Gujarati / ગુજરાતી' },
-    { code: 'bn', label: 'Bengali' },
-    { code: 'ur', label: 'Urdu' },
-    { code: 'ar', label: 'Arabic' },
-    { code: 'fr', label: 'French' },
-    { code: 'es', label: 'Spanish' },
+    { code: 'gu', label: 'Gujarati / ગુજરાતી' }
   ];
 
-  // Sign languages for the LMS target dropdown (ordered by coverage)
+  // Sign languages for the LMS target dropdown (only G-ISL and ISL)
   const LMS_TARGET_ORDER = [
-    'gisl','bsl','asl','dgs','lsf','pjm','gsl','isl','vsl','ngt','kurdish','bangla'
+    'gisl', 'isl'
   ];
 
   // ─── Text helpers ────────────────────────────────────────────────
@@ -111,10 +105,14 @@
   const GREETING_STARTERS = new Set(['good','nice','happy','merry']);
 
   function glossBase(gloss) {
-    return String(gloss).toLowerCase()
+    let str = String(gloss).toLowerCase()
       .replace(/\(.*?\)/g,'').replace(/#\d+$/g,'')
-      .replace(/\d+[a-z]?\^?$/g,'').replace(/^_num-/g,'')
-      .replace(/_\(.*?\)/g,'')
+      .replace(/^_num-/g,'').replace(/_\(.*?\)/g,'');
+    
+    let noNum = str.replace(/\d+[a-z]?\^?$/g,'');
+    if (!noNum) noNum = str;
+
+    return noNum
       .replace(/[^a-z0-9\u00C0-\u024F\u0370-\u03FF\u0400-\u04FF\u0100-\u017F]+/g,' ')
       .trim();
   }
@@ -334,19 +332,14 @@
     sel.innerHTML = '';
     for (const code of LMS_TARGET_ORDER) {
       const display = SIGN_LANG_DISPLAY[code] || code.toUpperCase();
-      const n = SIGN_LANG_COVERAGE[code] ?? 0;
-      let suffix;
-      if (n === 0) suffix = ' (no signs yet)';
-      else if (n < 200) suffix = ' (' + n + ' signs — limited)';
-      else suffix = ' (' + n + ' signs)';
       const o = document.createElement('option');
       o.value = code;
-      o.textContent = display + suffix;
+      o.textContent = display;
       sel.appendChild(o);
     }
     // Default based on browser locale
     const raw = (navigator.language || 'en').toLowerCase().split('-')[0];
-    const map = { de: 'dgs', fr: 'lsf', pl: 'pjm', nl: 'ngt', el: 'gsl', gu: 'gisl', hi: 'gisl' };
+    const map = { gu: 'gisl', hi: 'gisl', en: 'gisl' };
     sel.value = map[raw] || 'gisl';
   };
 
@@ -696,12 +689,11 @@
   // ─── Fingerspelling ──────────────────────────────────────────────
   LunaTranslator.prototype._fingerspellWord = function (word) {
     const blocks = [];
-    const upper = (word || '').toUpperCase();
-    for (const char of upper) {
-      if (char >= 'A' && char <= 'Z') {
-        const lb = this.letterToSign.get(char);
-        if (lb) blocks.push(lb);
-      }
+    const str = (word || '');
+    for (const char of str) {
+      let lb = this.letterToSign.get(char.toUpperCase());
+      if (!lb) lb = this.glossToSign.get(char.toLowerCase());
+      if (lb) blocks.push(lb);
     }
     return blocks;
   };
@@ -729,7 +721,7 @@
       if (accepted) {
         perToken.push({ kind: 'sign', origin: corpusLong || 'corpus', originShort: corpusShort || 'sign' });
         signed++;
-      } else if (this.letterToSign.size > 0) {
+      } else {
         const base = glossBase(t);
         const lb = this._fingerspellWord(base || t);
         if (lb.length > 0) {
@@ -740,9 +732,6 @@
           perToken.push({ kind: 'omitted', origin: null, originShort: 'omitted', reason: 'no sign or fingerspelling available' });
           omitted++;
         }
-      } else {
-        perToken.push({ kind: 'omitted', origin: null, originShort: 'omitted', reason: 'no sign or fingerspelling available' });
-        omitted++;
       }
       perTokenBlocks.push(blocksForI);
     }

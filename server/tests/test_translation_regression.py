@@ -51,6 +51,7 @@ KNOWN_TAGS = extract_known_tags()
         ("en", "pl", "fruit"),
         ("en", "el", "fruit"),
         ("fr", "fr", "fruit"),
+        ("gu", "en", "મારું નામ સોહિલ છે"),
     ],
 )
 def test_translate_text_returns_string(src: str, tgt: str, text: str) -> None:
@@ -69,6 +70,18 @@ def test_translate_text_returns_string(src: str, tgt: str, text: str) -> None:
     assert "translated" in data
     assert isinstance(data["translated"], str), f"non-string translated: {data['translated']!r}"
     assert "[object Object]" not in data["translated"]
+
+
+def test_gujarati_translation_to_english() -> None:
+    """Test Gujarati to English translation route."""
+    resp = client.post(
+        "/api/translate-text",
+        json={"text": "મારું નામ સોહિલ છે", "source_lang": "gu", "target_lang": "en"},
+    )
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "translated" in data
+    assert "name" in data["translated"].lower() or "sohil" in data["translated"].lower()
 
 
 @pytest.mark.parametrize(
