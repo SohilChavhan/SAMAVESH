@@ -340,6 +340,19 @@
   // Safe window.alert override
   const originalAlert = window.alert;
   window.alert = function (msg) {
+    const msgStr = typeof msg === 'string' ? msg : String(msg || '');
+    // Filter out internal CWASA / ANTLR grammar parser errors
+    if (
+      msgStr.includes('Ham4HMLGen.g') ||
+      msgStr.includes('org.antlr') ||
+      msgStr.includes('MismatchedToken') ||
+      msgStr.includes('MismatchedTreeNode') ||
+      msgStr.includes('NoViableAlt') ||
+      msgStr.includes('EarlyExitException')
+    ) {
+      console.warn('[CWASA / ANTLR Parser Warning]:', msgStr);
+      return;
+    }
     try {
       window.slAlert(msg);
     } catch (e) {

@@ -409,13 +409,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     const tokens = await vt._doPlan(text, false);
                     if (tokens.length) {
                         const { sigml } = vt._buildSigml(tokens);
-                        if (sigml && window.CWASA) {
+                        if (sigml && typeof sigml === 'string' && !sigml.includes('[object Object]') && window.CWASA && typeof window.CWASA.playSiGMLText === 'function') {
                             setTimeout(() => {
                                 try {
                                     CWASA.stopSiGML(0);
                                 } catch(e) {}
                                 try {
-                                    console.log('SIGML IS:', sigml);
                                     CWASA.playSiGMLText(sigml, 0);
                                 } catch(e) {
                                     console.error("CWASA Play Error", e);

@@ -677,11 +677,13 @@
   // ─── Fingerspelling ──────────────────────────────────────────────
   LunaTranslator.prototype._fingerspellWord = function (word) {
     const blocks = [];
-    const str = (word || '');
+    const str = String(word || '');
     for (const char of str) {
       let lb = this.letterToSign.get(char.toUpperCase());
       if (!lb) lb = this.glossToSign.get(char.toLowerCase());
-      if (lb) blocks.push(lb);
+      if (typeof lb === 'string' && lb.trim() && !lb.includes('[object Object]')) {
+        blocks.push(lb.trim());
+      }
     }
     return blocks;
   };
@@ -701,8 +703,8 @@
       const b = this.glossToSign.get(t);
       let accepted = false;
 
-      if (typeof b === 'string') {
-        blocksForI.push(b);
+      if (typeof b === 'string' && b.trim() && !b.includes('[object Object]')) {
+        blocksForI.push(b.trim());
         accepted = true;
       }
 
@@ -841,9 +843,10 @@
     this._highlightChips();
     this._renderCaption();
 
-    const blocks = this._perTokenBlocks[this._index] || [];
-    if (blocks.length && window.CWASA) {
-      const sigml = '<?xml version="1.0" encoding="utf-8"?>\n<sigml>\n' + blocks.join('\n') + '\n</sigml>';
+    const rawBlocks = this._perTokenBlocks[this._index] || [];
+    const validBlocks = rawBlocks.filter(b => typeof b === 'string' && b.trim() && !b.includes('[object Object]'));
+    if (validBlocks.length && window.CWASA && typeof window.CWASA.playSiGMLText === 'function') {
+      const sigml = '<?xml version="1.0" encoding="utf-8"?>\n<sigml>\n' + validBlocks.join('\n') + '\n</sigml>';
       try { CWASA.stop(this.avatarSlot); } catch (e) {}
       try { CWASA.playSiGMLText(sigml, this.avatarSlot); } catch (e) {}
       const ph = this._el('placeholder');
