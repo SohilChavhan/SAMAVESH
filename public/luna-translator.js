@@ -236,11 +236,6 @@
               🤟 Translate to Sign
             </button>
 
-            <div id="${pfx}_error" class="sl-luna-error" hidden>
-              <span id="${pfx}_errorMsg"></span>
-              <button id="${pfx}_errorRetry" class="sl-btn sl-btn-outline sl-luna-retry-btn">Retry</button>
-            </div>
-
             <!-- Token chips -->
             <div id="${pfx}_tokenList" class="sl-luna-token-list"></div>
             <div id="${pfx}_coverage" class="sl-luna-coverage"></div>
@@ -387,13 +382,6 @@
       });
     }
 
-    const retryBtn = this._el('errorRetry');
-    if (retryBtn) {
-      retryBtn.addEventListener('click', function () {
-        self._hideError();
-        self._runTranslate();
-      });
-    }
 
     // Enter key on textarea triggers translate
     const textInput = this._el('textInput');

@@ -27,8 +27,12 @@ document.addEventListener("DOMContentLoaded", () => {
     loginBtns.forEach(btn => btn.addEventListener("click", (e) => {
         e.preventDefault();
         const role = btn.dataset.role || "student";
+        if (authForm) authForm.reset();
+        const inputReg = document.getElementById("authRegNumber");
+        if (inputReg) inputReg.value = "";
         setActiveAuthTab(role);
         authOverlay.style.display = "flex";
+        if (inputReg) inputReg.focus();
     }));
 
     const contactOverlay = document.getElementById("slContactModal");
@@ -48,15 +52,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     }
 
+    function closeAuthModal() {
+        if (authOverlay) authOverlay.style.display = "none";
+        if (authForm) authForm.reset();
+        const inputReg = document.getElementById("authRegNumber");
+        if (inputReg) inputReg.value = "";
+        if (authError) authError.style.display = "none";
+    }
+
     window.addEventListener("click", (e) => {
-        if (e.target === authOverlay) authOverlay.style.display = "none";
+        if (e.target === authOverlay) closeAuthModal();
         if (e.target === contactOverlay) contactOverlay.style.display = "none";
     });
 
     if (closeAuthBtn) {
-        closeAuthBtn.addEventListener("click", () => {
-            authOverlay.style.display = "none";
-        });
+        closeAuthBtn.addEventListener("click", closeAuthModal);
     }
 
     authTabs.forEach(tab => tab.addEventListener("click", () => {
@@ -77,6 +87,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const inputHint = document.getElementById("authInputHint");
         const inputReg = document.getElementById("authRegNumber");
         
+        if (inputReg) {
+            inputReg.value = "";
+        }
+        
         if (role === "student") {
             inputLabel.innerText = "Student ID";
             inputHint.innerText = "Format: STU_<year>_<roll> (e.g. STU_01_122)";
@@ -91,30 +105,29 @@ document.addEventListener("DOMContentLoaded", () => {
             if (inputReg) inputReg.placeholder = "Your Registered Email ID";
         }
         document.getElementById("authRole").value = role;
-        authError.style.display = "none";
+        if (authError) authError.style.display = "none";
     }
 
     async function handleLogin(e) {
         e.preventDefault();
-        const regNumber = document.getElementById("authRegNumber").value;
+        const inputReg = document.getElementById("authRegNumber");
+        const regNumber = (inputReg ? inputReg.value : "").trim();
         const role = document.getElementById("authRole").value;
-        const remember = document.getElementById("authRemember").checked;
 
         try {
             const response = await fetch(`${API_BASE}/api/lms/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ reg_number: regNumber, role: role, remember_me: remember })
+                body: JSON.stringify({ reg_number: regNumber, role: role, remember_me: false })
             });
             const data = await response.json();
             
             if (response.ok && data.success) {
                 STATE.user = data.user;
-                if (remember) {
-                    localStorage.setItem("sl_user", JSON.stringify(data.user));
-                } else {
-                    sessionStorage.setItem("sl_user", JSON.stringify(data.user));
-                }
+                sessionStorage.setItem("sl_user", JSON.stringify(data.user));
+                localStorage.removeItem("sl_user");
+                if (authForm) authForm.reset();
+                if (inputReg) inputReg.value = "";
                 authOverlay.style.display = "none";
                 loadProgressAndRender();
             } else {
@@ -128,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function initSession() {
-        const savedUser = localStorage.getItem("sl_user") || sessionStorage.getItem("sl_user");
+        const savedUser = sessionStorage.getItem("sl_user");
         if (savedUser) {
             try {
                 STATE.user = JSON.parse(savedUser);
@@ -185,6 +198,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function showLanding() {
+        if (authForm) authForm.reset();
+        const inputReg = document.getElementById("authRegNumber");
+        if (inputReg) inputReg.value = "";
+        localStorage.removeItem("sl_user");
+        sessionStorage.removeItem("sl_user");
+        STATE.user = null;
         landingView.style.display = "block";
         dashView.style.display = "none";
         profileBadge.style.display = "none";
@@ -539,7 +558,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.slStartQuiz = function(subject, chapterId) {
         const qid = `${subject}_${chapterId}`;
-        alert(`Starting Quiz for ${subject} Chapter ${chapterId}...\\n\\nSimulating video sign answer submission...`);
+        slToast(`Starting Quiz for ${subject} Chapter ${chapterId}... Simulating video sign answer.`, "info", 3500);
         
         // Simulate kid uploading a video sign for question 1
         setTimeout(async () => {
@@ -562,7 +581,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 const data = await resp.json();
                 
                 if(data.success) {
-                    alert(`Quiz Evaluated by AI!\\n\\nScore: ${data.score}/10\\nFeedback: ${data.feedback}\\nStars: ${"⭐".repeat(data.stars)}`);
+                    slQuizResultModal({
+                        score: data.score,
+                        feedback: data.feedback,
+                        stars: data.stars,
+                        subject: subject,
+                        chapterId: chapterId
+                    });
                     
                     // Save score
                     await fetch(`${API_BASE}/api/lms/progress`, {
@@ -581,39 +606,12 @@ document.addEventListener("DOMContentLoaded", () => {
             } catch(e) {
                 console.error(e);
             }
-        }, 1000);
+        }, 1200);
     }
 
     function showProfileModal() {
-        let totalScore = 0;
-        let totalQuizzes = 0;
-        
-        for (const [qid, score] of Object.entries(STATE.progress.quizzes || {})) {
-            totalScore += score;
-            totalQuizzes += 1;
-        }
-        
-        const percentage = totalQuizzes > 0 ? Math.round((totalScore / (totalQuizzes * 10)) * 100) : 0;
-        
-        let mathProg = STATE.progress.courses["maths"] ? STATE.progress.courses["maths"].progress_pct : 0;
-        let langProg = STATE.progress.courses["language"] ? STATE.progress.courses["language"].progress_pct : 0;
-        let sciProg = STATE.progress.courses["science"] ? STATE.progress.courses["science"].progress_pct : 0;
-
-        alert(`
-        === MY PROFILE ===
-        Name: ${STATE.user.name}
-        Student ID: ${STATE.user.id}
-        Grade: ${STATE.user.grade}
-        
-        === PROGRESS ===
-        Maths: ${mathProg}% completed
-        Language: ${langProg}% completed
-        Science: ${sciProg}% completed
-        
-        === QUIZ STATS ===
-        Quizzes Taken: ${totalQuizzes}
-        Overall Average: ${percentage}%
-        `);
+        if (!STATE.user) return;
+        slProfileModal(STATE.user, STATE.progress);
     }
 
     function renderTeacherDashboard() {
@@ -811,17 +809,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Logout
     profileBadge.addEventListener("click", () => {
-        if(confirm("Do you want to log out?")) {
-            localStorage.removeItem("sl_user");
-            sessionStorage.removeItem("sl_user");
-            STATE.user = null;
-            // Clean up Luna translator
-            if (STATE.lunaTranslator) {
-                STATE.lunaTranslator.stop();
-                STATE.lunaTranslator = null;
+        slConfirm({
+            title: "Log Out",
+            message: "Do you want to log out of your session?",
+            confirmText: "Log Out",
+            cancelText: "Cancel",
+            icon: "logout",
+            danger: true
+        }).then(confirmed => {
+            if (confirmed) {
+                localStorage.removeItem("sl_user");
+                sessionStorage.removeItem("sl_user");
+                STATE.user = null;
+                // Clean up Luna translator
+                if (STATE.lunaTranslator) {
+                    STATE.lunaTranslator.stop();
+                    STATE.lunaTranslator = null;
+                }
+                showLanding();
+                slToast("You have been logged out.", "info");
             }
-            showLanding();
-        }
+        });
     });
 
     // ─── Luna Translator init helper ────────────────────────────
@@ -863,7 +871,7 @@ window.slExportPDF = function() {
     ];
 
     if (!window.jspdf) {
-        alert("PDF library is still loading. Please try again in a second.");
+        slToast("PDF library is still loading. Please try again in a moment.", "warning");
         return;
     }
 
@@ -948,8 +956,14 @@ window.slViewStudent = function(studentId) {
             </div>
 
             <div style="display: flex; gap: 1rem;">
-                <button class="sl-btn sl-btn-primary" style="flex: 1; justify-content: center;" onclick="alert('Message sent!')">💬 Message</button>
-                <button class="sl-btn sl-btn-outline" style="flex: 1; justify-content: center;" onclick="alert('Module assigned.')">📚 Assign Work</button>
+                <button class="sl-btn sl-btn-primary" style="flex: 1; justify-content: center; gap: 0.5rem;" onclick="slToast('Message sent to student!', 'success')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    Message
+                </button>
+                <button class="sl-btn sl-btn-outline" style="flex: 1; justify-content: center; gap: 0.5rem;" onclick="slToast('Module assigned successfully!', 'success')">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"></path><rect x="8" y="2" width="8" height="4" rx="1" ry="1"></rect></svg>
+                    Assign Work
+                </button>
             </div>
         </div>
     `;

@@ -14,10 +14,11 @@
     href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,800;9..40,900&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="/styles/lms.css?v=2">
+  <link rel="stylesheet" href="/styles/lms.css?v=4">
   <link rel="icon" type="image/png" href="/logo.png">
-  <script defer src="/luna-translator.js?v=12"></script>
-  <script defer src="/lms.js?v=11"></script>
+  <script src="/sl-popup.js?v=2"></script>
+  <script defer src="/luna-translator.js?v=13"></script>
+  <script defer src="/lms.js?v=14"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 </head>
@@ -283,26 +284,19 @@
         <button class="sl-auth-tab" data-tab="parent">Parent</button>
       </div>
 
-      <form id="slAuthForm">
+      <form id="slAuthForm" autocomplete="off">
         <input type="hidden" id="authRole" value="student">
 
         <div class="sl-auth-error" id="slAuthError"></div>
 
         <div class="sl-form-group">
           <label id="authInputLabel" for="authRegNumber">Student ID</label>
-          <input type="text" id="authRegNumber" class="sl-form-input" placeholder="e.g. STU_01_122" required>
+          <input type="text" id="authRegNumber" class="sl-form-input" placeholder="e.g. STU_01_122" autocomplete="off" required>
           <div class="sl-form-hint" id="authInputHint">Format: STU_&lt;year&gt;_&lt;roll&gt;</div>
         </div>
 
-        <div class="sl-form-group"
-          style="display:flex; align-items:center; gap:0.5rem; margin-bottom:2rem; margin-top:1rem;">
-          <input type="checkbox" id="authRemember" checked
-            style="width:18px; height:18px; accent-color:var(--primary);">
-          <label for="authRemember" style="margin:0; font-weight:600; cursor:pointer;">Remember me</label>
-        </div>
-
         <button type="submit" class="sl-btn sl-btn-primary"
-          style="width:100%; justify-content:center; font-size:1.1rem; padding:1rem;">Sign In</button>
+          style="width:100%; justify-content:center; font-size:1.1rem; padding:1rem; margin-top:1.5rem;">Sign In</button>
       </form>
     </div>
   </div>

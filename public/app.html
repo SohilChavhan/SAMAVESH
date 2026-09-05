@@ -1591,7 +1591,6 @@
             <div class="translator-error-title" id="translatorErrorTitle">Translation failed.</div>
             <div class="translator-error-body" id="translatorErrorBody">Try again, or switch to a supported language pair.</div>
             <div class="translator-error-actions">
-              <button type="button" id="translatorErrorRetry" class="kz-btn-secondary" style="padding:8px 16px; font-size:14px;">Retry</button>
               <button type="button" id="translatorErrorDismiss" class="btn btn-secondary">Dismiss</button>
             </div>
           </div>
@@ -3424,17 +3423,8 @@
       const panel = () => document.getElementById('translatorError');
       const title = () => document.getElementById('translatorErrorTitle');
       const body = () => document.getElementById('translatorErrorBody');
-      let retryCb = null;
       function wire() {
-        const retryBtn = document.getElementById('translatorErrorRetry');
         const dismissBtn = document.getElementById('translatorErrorDismiss');
-        if (retryBtn && !retryBtn.dataset.wired) {
-          retryBtn.addEventListener('click', () => {
-            ErrorPanel.hide();
-            if (typeof retryCb === 'function') retryCb();
-          });
-          retryBtn.dataset.wired = '1';
-        }
         if (dismissBtn && !dismissBtn.dataset.wired) {
           dismissBtn.addEventListener('click', () => ErrorPanel.hide());
           dismissBtn.dataset.wired = '1';
@@ -3448,12 +3438,10 @@
           const t = title(); if (t) t.textContent = (opts && opts.title) || 'Translation failed.';
           const b = body(); if (b) b.textContent = (opts && opts.message) ||
             'Try again, or switch to a supported language pair.';
-          retryCb = (opts && typeof opts.onRetry === 'function') ? opts.onRetry : null;
           p.hidden = false;
         },
         hide() {
           const p = panel(); if (p) p.hidden = true;
-          retryCb = null;
         },
       };
     })();
