@@ -202,7 +202,24 @@
     if (!container) return;
     const avClass = 'av' + this.avatarSlot;
     const pfx = this.containerId; // prefix for unique IDs
-    const t = (k, v) => (window.SamaveshI18n ? window.SamaveshI18n.t(k, v) : k);
+    const t = (k, v) => {
+      if (window.SamaveshI18n) {
+        const res = window.SamaveshI18n.t(k, v);
+        if (res && res !== k) return res;
+      }
+      const fallbacks = {
+        'luna.title': 'Luna Sign Language Translator',
+        'luna.subtitle': 'Type anything and watch Luna sign it for you!',
+        'luna.write_in': 'You write in',
+        'luna.signed_in': 'Signed in',
+        'luna.placeholder': 'Try something like: Hello, how are you?',
+        'luna.btn_translate': '🤟 Translate to Sign',
+        'luna.loading': 'Loading…',
+        'luna.ready': 'Ready',
+        'luna.refresh_hint': 'If Luna is not visible, please <a href="javascript:location.reload()" class="sl-luna-refresh-link">refresh</a>'
+      };
+      return fallbacks[k] || k;
+    };
 
     container.innerHTML = `
       <div class="sl-luna-widget">
@@ -267,6 +284,17 @@
               <div class="sl-luna-pb-time">
                 <span id="${pfx}_timeCurrent">0:00</span> / <span id="${pfx}_timeTotal">0:00</span>
               </div>
+            </div>
+
+            <!-- Refresh hint -->
+            <div class="sl-luna-refresh-hint" id="${pfx}_refreshHint">
+              <svg class="sl-luna-refresh-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                <path d="M16 16h5v5"/>
+              </svg>
+              <span data-i18n-html="luna.refresh_hint">${t('luna.refresh_hint')}</span>
             </div>
           </div>
         </div>

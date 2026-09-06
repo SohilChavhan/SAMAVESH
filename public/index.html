@@ -14,11 +14,11 @@
     href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,800;9..40,900&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="/styles/lms.css?v=8">
+  <link rel="stylesheet" href="/styles/lms.css?v=10">
   <link rel="icon" type="image/png" href="/logo.png">
-  <script src="/i18n-samavesh.js?v=2"></script>
+  <script src="/i18n-samavesh.js?v=3"></script>
   <script src="/sl-popup.js?v=4"></script>
-  <script defer src="/luna-translator.js?v=16"></script>
+  <script defer src="/luna-translator.js?v=18"></script>
   <script defer src="/lms.js?v=17"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
@@ -37,11 +37,16 @@
 
       <!-- Login & Navigation Items -->
       <ul class="sl-nav-links">
-        <li class="sl-nav-item"><a href="#" class="sl-login-trigger" data-role="student" data-i18n="nav.student_login">Student Login</a></li>
-        <li class="sl-nav-item"><a href="#" class="sl-login-trigger" data-role="teacher" data-i18n="nav.teacher_login">Teacher Login</a></li>
-        <li class="sl-nav-item"><a href="#" class="sl-login-trigger" data-role="parent" data-i18n="nav.parent_portal">Parent Portal</a></li>
+        <li class="sl-nav-item"><a href="#" class="sl-login-trigger" data-role="student"
+            data-i18n="nav.student_login">Student Login</a></li>
+        <li class="sl-nav-item"><a href="#" class="sl-login-trigger" data-role="teacher"
+            data-i18n="nav.teacher_login">Teacher Login</a></li>
+        <li class="sl-nav-item"><a href="#" class="sl-login-trigger" data-role="parent"
+            data-i18n="nav.parent_portal">Parent Portal</a></li>
         <li class="sl-nav-item">
-          <button type="button" class="sl-lang-toggle-btn" id="slLangToggleBtn" onclick="if(window.SamaveshI18n){window.SamaveshI18n.toggleLanguage();}else if(window.toggleLanguage){window.toggleLanguage();}" aria-label="Switch to Gujarati" title="Switch Language / ભાષા બદલો">
+          <button type="button" class="sl-lang-toggle-btn" id="slLangToggleBtn"
+            onclick="if(window.SamaveshI18n){window.SamaveshI18n.toggleLanguage();}else if(window.toggleLanguage){window.toggleLanguage();}"
+            aria-label="Switch to Gujarati" title="Switch Language / ભાષા બદલો">
             <span class="sl-lang-globe">🌐</span>
             <span class="sl-lang-text" id="slLangText">ગુજરાતી</span>
           </button>
@@ -85,7 +90,8 @@
             <div class="sl-mascot-avatar">🦉</div>
             <div class="sl-mascot-speech">
               <h4 data-i18n="hero.mascot_title">Hi, I'm Kozhi the Owl!</h4>
-              <p data-i18n="hero.mascot_desc">I'll help you learn sign language while you study fun subjects. Are you ready?</p>
+              <p data-i18n="hero.mascot_desc">I'll help you learn sign language while you study fun subjects. Are you
+                ready?</p>
               <div class="sl-sign-pills">
                 <span class="sl-sign-pill" data-i18n="hero.pill_hello">👋 "Hello"</span>
                 <span class="sl-sign-pill" data-i18n="hero.pill_learn">🧠 "Learn"</span>
@@ -108,7 +114,9 @@
           <div class="sl-step-card">
             <div class="sl-step-icon sl-icon-blue">🪪</div>
             <h3 data-i18n="how.step1_title">1. Sign In with Your ID</h3>
-            <p data-i18n-html="how.step1_desc">Use your school ID like <strong>STU_01_122</strong> or <strong>PRO1233</strong>.</p>
+            <p data-i18n-html="how.step1_desc">Use your school ID like <strong>STU_01_122</strong> or
+              <strong>PRO1233</strong>.
+            </p>
           </div>
           <div class="sl-step-card">
             <div class="sl-step-icon sl-icon-yellow">▶️</div>
@@ -139,7 +147,8 @@
               <h3 data-i18n="subjects.math_title">Maths</h3>
             </div>
             <p data-i18n="subjects.math_desc">Numbers, shapes, and fun problems to solve every day.</p>
-            <button class="sl-btn sl-btn-orange sl-login-trigger" data-role="student" data-i18n="subjects.math_btn">Explore Maths</button>
+            <button class="sl-btn sl-btn-orange sl-login-trigger" data-role="student"
+              data-i18n="subjects.math_btn">Explore Maths</button>
           </div>
           <!-- Language -->
           <div class="sl-subject-card language">
@@ -148,7 +157,8 @@
               <h3 data-i18n="subjects.lang_title">Language</h3>
             </div>
             <p data-i18n="subjects.lang_desc">Words, sentences, and fun stories in sign language.</p>
-            <button class="sl-btn sl-btn-secondary sl-login-trigger" data-role="student" data-i18n="subjects.lang_btn">Explore Language</button>
+            <button class="sl-btn sl-btn-secondary sl-login-trigger" data-role="student"
+              data-i18n="subjects.lang_btn">Explore Language</button>
           </div>
           <!-- Science -->
           <div class="sl-subject-card science">
@@ -157,7 +167,8 @@
               <h3 data-i18n="subjects.sci_title">Science</h3>
             </div>
             <p data-i18n="subjects.sci_desc">Plants, animals, and discovering how things work.</p>
-            <button class="sl-btn sl-btn-primary sl-login-trigger" data-role="student" data-i18n="subjects.sci_btn">Explore Science</button>
+            <button class="sl-btn sl-btn-primary sl-login-trigger" data-role="student"
+              data-i18n="subjects.sci_btn">Explore Science</button>
           </div>
           <!-- Sign Language -->
           <div class="sl-subject-card signlang">
@@ -167,7 +178,8 @@
             </div>
             <p data-i18n="subjects.sign_desc">Learn to communicate with hands, expressions, and gestures.</p>
             <button class="sl-btn sl-btn-outline sl-login-trigger" data-role="student"
-              style="color: #8338EC; border-color: #8338EC;" data-i18n="subjects.sign_btn">Explore Sign Language</button>
+              style="color: #8338EC; border-color: #8338EC;" data-i18n="subjects.sign_btn">Explore Sign
+              Language</button>
           </div>
         </div>
       </section>
@@ -177,8 +189,10 @@
       <!-- Sign Language Focus Section -->
       <section class="sl-section">
         <div class="sl-lang-focus-box">
-          <h2 style="font-size:2.4rem; font-weight:900; margin-bottom:1rem;" data-i18n="sign_focus.title">Learn in Your Sign Language</h2>
-          <p style="font-size:1.2rem; color:#CBD5E1; max-width:600px; margin:0 auto;" data-i18n="sign_focus.desc">Our lessons use sign language so
+          <h2 style="font-size:2.4rem; font-weight:900; margin-bottom:1rem;" data-i18n="sign_focus.title">Learn in Your
+            Sign Language</h2>
+          <p style="font-size:1.2rem; color:#CBD5E1; max-width:600px; margin:0 auto;" data-i18n="sign_focus.desc">Our
+            lessons use sign language so
             every child can learn easily and playfully!</p>
 
           <div class="sl-lang-pills-row">
@@ -195,8 +209,10 @@
         <div class="sl-parents-section">
           <div class="sl-parents-grid">
             <div>
-              <h2 style="font-size:2rem; font-weight:800; margin-bottom:1rem;" data-i18n="pt.title">For Parents & Teachers</h2>
-              <p style="font-size:1.1rem; color:var(--text-muted);" data-i18n="pt.desc">SAMAVESH is built to provide a secure and supervised
+              <h2 style="font-size:2rem; font-weight:800; margin-bottom:1rem;" data-i18n="pt.title">For Parents &
+                Teachers</h2>
+              <p style="font-size:1.1rem; color:var(--text-muted);" data-i18n="pt.desc">SAMAVESH is built to provide a
+                secure and supervised
                 environment for students.</p>
 
               <ul class="sl-check-list">
@@ -204,14 +220,17 @@
                   <div class="sl-check-icon">✓</div> <span data-i18n="pt.check1">Safe, kid-friendly design.</span>
                 </li>
                 <li>
-                  <div class="sl-check-icon">✓</div> <span data-i18n="pt.check2">Track progress with simple reports.</span>
+                  <div class="sl-check-icon">✓</div> <span data-i18n="pt.check2">Track progress with simple
+                    reports.</span>
                 </li>
                 <li>
-                  <div class="sl-check-icon">✓</div> <span data-i18n="pt.check3">Easy login with school registration numbers.</span>
+                  <div class="sl-check-icon">✓</div> <span data-i18n="pt.check3">Easy login with school registration
+                    numbers.</span>
                 </li>
               </ul>
 
-              <button class="sl-btn sl-btn-primary" id="openContactModal" style="margin-top:1rem;" data-i18n="pt.btn">Contact Us</button>
+              <button class="sl-btn sl-btn-primary" id="openContactModal" style="margin-top:1rem;"
+                data-i18n="pt.btn">Contact Us</button>
             </div>
             <div style="text-align:center;">
               <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=600"
@@ -243,7 +262,8 @@
       <div class="sl-dashboard-container">
         <div class="sl-dash-topbar" style="margin-bottom: 2rem;">
           <div class="sl-dash-welcome">
-            <button class="sl-btn sl-btn-outline" onclick="slCloseVideo()" style="padding: 0.5rem 1rem;" data-i18n="player.back">← Back</button>
+            <button class="sl-btn sl-btn-outline" onclick="slCloseVideo()" style="padding: 0.5rem 1rem;"
+              data-i18n="player.back">← Back</button>
           </div>
           <h2 style="font-size:2rem; font-weight:900;" data-i18n="player.dash_title">Student Dashboard</h2>
           <div style="width: 80px;"></div>
@@ -258,6 +278,16 @@
             </div>
             <div class="sl-captions-box" id="slCaptions" data-i18n="player.captions_waiting">
               Waiting for signs...
+            </div>
+            <div class="sl-avatar-refresh-hint">
+              <svg class="sl-luna-refresh-svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+                <path d="M3 3v5h5"/>
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/>
+                <path d="M16 16h5v5"/>
+              </svg>
+              <span data-i18n-html="player.refresh_hint">If Luna is not visible, please <a
+                  href="javascript:location.reload()" class="sl-luna-refresh-link">refresh</a></span>
             </div>
           </div>
 
@@ -283,7 +313,8 @@
 
       <div class="sl-auth-header">
         <h2 style="font-size:1.8rem; font-weight:900; color:var(--text-main);" data-i18n="auth.title">Welcome Back!</h2>
-        <p style="color:var(--text-muted); margin-top:0.5rem;" data-i18n="auth.subtitle">Sign in to continue learning.</p>
+        <p style="color:var(--text-muted); margin-top:0.5rem;" data-i18n="auth.subtitle">Sign in to continue learning.
+        </p>
       </div>
 
       <div class="sl-auth-tabs">
@@ -305,7 +336,8 @@
         </div>
 
         <button type="submit" class="sl-btn sl-btn-primary"
-          style="width:100%; justify-content:center; font-size:1.1rem; padding:1rem; margin-top:1.5rem;" data-i18n="auth.btn_submit">Sign
+          style="width:100%; justify-content:center; font-size:1.1rem; padding:1rem; margin-top:1.5rem;"
+          data-i18n="auth.btn_submit">Sign
           In</button>
       </form>
     </div>
@@ -318,7 +350,8 @@
 
       <div class="sl-auth-header" style="margin-bottom: 1.5rem;">
         <h2 style="font-size:1.8rem; font-weight:900; color:var(--text-main);" data-i18n="contact.title">Contact Us</h2>
-        <p style="color:var(--text-muted); margin-top:0.4rem;" data-i18n="contact.subtitle">We're here to help students, parents, and educators.</p>
+        <p style="color:var(--text-muted); margin-top:0.4rem;" data-i18n="contact.subtitle">We're here to help students,
+          parents, and educators.</p>
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 1rem; text-align: left;">
@@ -328,7 +361,8 @@
             style="background: #EFF6FF; color: var(--primary); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
             ✉️</div>
           <div>
-            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" data-i18n="contact.support_label">
+            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;"
+              data-i18n="contact.support_label">
               General Support</div>
             <a href="mailto:support@samavesh.com"
               style="font-weight: 700; color: var(--primary); text-decoration: none; font-size: 1.05rem;">support@samavesh.com</a>
@@ -341,7 +375,8 @@
             style="background: #ECFDF5; color: #06D6A0; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
             🏫</div>
           <div>
-            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" data-i18n="contact.school_label">
+            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;"
+              data-i18n="contact.school_label">
               School & Teacher Inquiries</div>
             <a href="mailto:schools@samavesh.com"
               style="font-weight: 700; color: #06D6A0; text-decoration: none; font-size: 1.05rem;">schools@samavesh.com</a>
@@ -354,10 +389,12 @@
             style="background: #FFF9EC; color: #FF9F1C; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
             📞</div>
           <div>
-            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" data-i18n="contact.phone_label">
+            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;"
+              data-i18n="contact.phone_label">
               Helpline & Phone</div>
             <div style="font-weight: 700; color: var(--text-main); font-size: 1.05rem;">+91 12345 67890</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="contact.timing">Mon – Sat: 9:00 AM – 6:00 PM IST</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="contact.timing">Mon – Sat: 9:00 AM –
+              6:00 PM IST</div>
           </div>
         </div>
       </div>

@@ -1610,6 +1610,60 @@ input:checked + .sl-slider:before {
   margin-left: auto;
 }
 
+/* Refresh hint */
+.sl-luna-refresh-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.65rem;
+  font-size: 0.82rem;
+  color: var(--text-muted, #64748B);
+  font-weight: 600;
+  text-align: center;
+  user-select: none;
+}
+
+.sl-luna-refresh-svg {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+  vertical-align: -1px;
+  stroke: currentColor;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.sl-luna-refresh-hint:hover .sl-luna-refresh-svg,
+.sl-avatar-refresh-hint:hover .sl-luna-refresh-svg {
+  transform: rotate(60deg);
+}
+
+.sl-luna-refresh-link {
+  color: var(--primary, #3B82F6);
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.sl-luna-refresh-link:hover {
+  color: #1D4ED8;
+  text-decoration: underline;
+}
+
+.sl-avatar-refresh-hint {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+  font-size: 0.82rem;
+  color: var(--text-muted, #64748B);
+  font-weight: 600;
+  text-align: center;
+}
+
 /* ─── Responsive ─────────────────────────────────────────────────── */
 @media (max-width: 768px) {
   .sl-luna-body {

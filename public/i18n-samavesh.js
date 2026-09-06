@@ -181,6 +181,8 @@
       'luna.btn_translate': '🤟 Translate to Sign',
       'luna.loading': 'Loading…',
       'luna.ready': 'Ready',
+      'luna.refresh_hint': 'If Luna is not visible, please <a href="javascript:location.reload()" class="sl-luna-refresh-link">refresh</a>',
+      'player.refresh_hint': 'If Luna is not visible, please <a href="javascript:location.reload()" class="sl-luna-refresh-link">refresh</a>',
 
       // Modals & Popups
       'popup.logout_title': 'Log Out',
@@ -368,6 +370,8 @@
       'luna.btn_translate': '🤟 સંકેતમાં અનુવાદ કરો',
       'luna.loading': 'લોડ થઈ રહ્યું છે…',
       'luna.ready': 'તૈયાર',
+      'luna.refresh_hint': 'જો લૂના દેખાતી નથી, તો કૃપા કરીને <a href="javascript:location.reload()" class="sl-luna-refresh-link">રિફ્રેશ કરો</a>',
+      'player.refresh_hint': 'જો લૂના દેખાતી નથી, તો કૃપા કરીને <a href="javascript:location.reload()" class="sl-luna-refresh-link">રિફ્રેશ કરો</a>',
 
       // Modals & Popups
       'popup.logout_title': 'લૉગ આઉટ',
