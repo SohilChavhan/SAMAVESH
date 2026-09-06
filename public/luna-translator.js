@@ -202,14 +202,15 @@
     if (!container) return;
     const avClass = 'av' + this.avatarSlot;
     const pfx = this.containerId; // prefix for unique IDs
+    const t = (k, v) => (window.SamaveshI18n ? window.SamaveshI18n.t(k, v) : k);
 
     container.innerHTML = `
       <div class="sl-luna-widget">
         <div class="sl-luna-header">
           <div class="sl-luna-header-icon">🤟</div>
           <div>
-            <h3 class="sl-luna-title">Luna Sign Language Translator</h3>
-            <p class="sl-luna-subtitle">Type anything and watch Luna sign it for you!</p>
+            <h3 class="sl-luna-title">${t('luna.title')}</h3>
+            <p class="sl-luna-subtitle">${t('luna.subtitle')}</p>
           </div>
         </div>
 
@@ -218,22 +219,22 @@
           <div class="sl-luna-input-pane">
             <div class="sl-luna-lang-row">
               <div class="sl-luna-lang-group">
-                <label for="${pfx}_srcLang">You write in</label>
+                <label for="${pfx}_srcLang">${t('luna.write_in')}</label>
                 <select id="${pfx}_srcLang" class="sl-luna-select"></select>
               </div>
               <div class="sl-luna-lang-arrow">→</div>
               <div class="sl-luna-lang-group">
-                <label for="${pfx}_tgtLang">Signed in</label>
+                <label for="${pfx}_tgtLang">${t('luna.signed_in')}</label>
                 <select id="${pfx}_tgtLang" class="sl-luna-select"></select>
               </div>
             </div>
 
             <textarea id="${pfx}_textInput" class="sl-luna-textarea"
-              placeholder="Try something like: Hello, how are you?"
+              placeholder="${t('luna.placeholder')}"
               rows="3" maxlength="5000"></textarea>
 
             <button id="${pfx}_translateBtn" class="sl-btn sl-btn-primary sl-luna-translate-btn">
-              🤟 Translate to Sign
+              ${t('luna.btn_translate')}
             </button>
 
             <!-- Token chips -->
@@ -244,7 +245,7 @@
           <!-- Right: Avatar + controls -->
           <div class="sl-luna-avatar-pane">
             <div class="sl-luna-status-row">
-              <span id="${pfx}_status" class="sl-luna-status-badge">Loading…</span>
+              <span id="${pfx}_status" class="sl-luna-status-badge">${t('luna.loading')}</span>
             </div>
 
             <div class="sl-luna-avatar-stage" id="${pfx}_avatarStage">
@@ -315,10 +316,10 @@
       o.textContent = l.label;
       sel.appendChild(o);
     }
-    // Auto-detect browser language
-    const raw = (navigator.language || 'en').toLowerCase().split('-')[0];
+    // Auto-detect browser or active site language
+    const currentLang = (window.SamaveshI18n && window.SamaveshI18n.getLanguage()) || ((navigator.language || 'en').toLowerCase().split('-')[0]);
     const codes = LMS_SOURCE_LANGS.map(l => l.code);
-    sel.value = codes.includes(raw) ? raw : 'en';
+    sel.value = codes.includes(currentLang) ? currentLang : 'en';
   };
 
   LunaTranslator.prototype._populateTargetLangs = function () {

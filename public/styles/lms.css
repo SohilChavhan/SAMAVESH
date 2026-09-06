@@ -95,6 +95,54 @@ body {
   color: var(--primary);
 }
 
+/* Language Switcher Button beside Parent Portal */
+.sl-lang-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  background: #FFFFFF;
+  color: var(--primary, #4A90E2);
+  border: 1.5px solid #D0E2FF;
+  border-radius: 50px;
+  padding: 0.45rem 1rem;
+  font-family: inherit;
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(74, 144, 226, 0.12);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  user-select: none;
+  line-height: 1.2;
+}
+
+.sl-lang-toggle-btn:hover {
+  background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+  border-color: var(--primary, #4A90E2);
+  color: #1D4ED8;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.22);
+}
+
+.sl-lang-toggle-btn:active {
+  transform: translateY(0) scale(0.97);
+}
+
+.sl-lang-toggle-btn .sl-lang-globe {
+  font-size: 1.1rem;
+  display: inline-flex;
+  align-items: center;
+  transition: transform 0.3s ease;
+}
+
+.sl-lang-toggle-btn:hover .sl-lang-globe {
+  transform: rotate(20deg) scale(1.1);
+}
+
+.sl-lang-toggle-btn .sl-lang-text {
+  letter-spacing: 0.01em;
+}
+
+
 .sl-btn {
   font-family: inherit;
   font-weight: 700;

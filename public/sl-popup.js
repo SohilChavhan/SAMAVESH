@@ -243,6 +243,8 @@
       starsHtml += i < starCount ? SL_ICONS.star : SL_ICONS.starEmpty;
     }
 
+    const t = (k, v) => (window.SamaveshI18n ? window.SamaveshI18n.t(k, v) : k);
+
     const html = `
       <div class="sl-quiz-result-box">
         <div class="sl-quiz-score-badge">
@@ -257,11 +259,11 @@
     `;
 
     return window.slModal({
-      title: 'AI Sign Evaluation',
+      title: t('popup.quiz_title') || 'AI Sign Evaluation',
       html: html,
       icon: 'success',
       iconType: 'success',
-      confirmText: 'Continue Learning',
+      confirmText: t('popup.continue_learning') || 'Continue Learning',
       showClose: true
     });
   };
@@ -272,6 +274,7 @@
   window.slProfileModal = function (user, progress) {
     if (!user) return;
     const initial = user.name ? user.name.charAt(0).toUpperCase() : 'S';
+    const t = (k, v) => (window.SamaveshI18n ? window.SamaveshI18n.t(k, v) : k);
     
     let totalScore = 0;
     let totalQuizzes = 0;
@@ -299,17 +302,17 @@
         </div>
         
         <div class="sl-profile-section">
-          <div class="sl-profile-section-title">Course Progress</div>
+          <div class="sl-profile-section-title">${t('popup.course_progress')}</div>
           <div class="sl-prog-group">
-            <div class="sl-prog-label"><span>${SL_ICONS.math} Mathematics</span><b>${mathProg}%</b></div>
+            <div class="sl-prog-label"><span>${SL_ICONS.math} ${t('subjects.math_title')}</span><b>${mathProg}%</b></div>
             <div class="sl-prog-track"><div class="sl-prog-fill orange" style="width:${mathProg}%"></div></div>
           </div>
           <div class="sl-prog-group">
-            <div class="sl-prog-label"><span>${SL_ICONS.language} Language</span><b>${langProg}%</b></div>
+            <div class="sl-prog-label"><span>${SL_ICONS.language} ${t('subjects.lang_title')}</span><b>${langProg}%</b></div>
             <div class="sl-prog-track"><div class="sl-prog-fill mint" style="width:${langProg}%"></div></div>
           </div>
           <div class="sl-prog-group">
-            <div class="sl-prog-label"><span>${SL_ICONS.science} Science</span><b>${sciProg}%</b></div>
+            <div class="sl-prog-label"><span>${SL_ICONS.science} ${t('subjects.sci_title')}</span><b>${sciProg}%</b></div>
             <div class="sl-prog-track"><div class="sl-prog-fill blue" style="width:${sciProg}%"></div></div>
           </div>
         </div>
@@ -317,22 +320,22 @@
         <div class="sl-profile-stats-grid">
           <div class="sl-stat-box">
             <span class="sl-stat-num">${totalQuizzes}</span>
-            <span class="sl-stat-lbl">Quizzes Taken</span>
+            <span class="sl-stat-lbl">${t('popup.quizzes_taken')}</span>
           </div>
           <div class="sl-stat-box">
             <span class="sl-stat-num">${percentage}%</span>
-            <span class="sl-stat-lbl">Overall Average</span>
+            <span class="sl-stat-lbl">${t('popup.overall_avg')}</span>
           </div>
         </div>
       </div>
     `;
 
     return window.slModal({
-      title: 'Student Profile',
+      title: t('popup.profile_title') || 'Student Profile',
       html: html,
       icon: 'profile',
       iconType: 'info',
-      confirmText: 'Done',
+      confirmText: t('popup.done') || 'Done',
       showClose: true
     });
   };

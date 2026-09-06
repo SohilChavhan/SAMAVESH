@@ -14,11 +14,12 @@
     href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,600;9..40,800;9..40,900&display=swap"
     rel="stylesheet">
 
-  <link rel="stylesheet" href="/styles/lms.css?v=6">
+  <link rel="stylesheet" href="/styles/lms.css?v=8">
   <link rel="icon" type="image/png" href="/logo.png">
-  <script src="/sl-popup.js?v=3"></script>
-  <script defer src="/luna-translator.js?v=14"></script>
-  <script defer src="/lms.js?v=15"></script>
+  <script src="/i18n-samavesh.js?v=2"></script>
+  <script src="/sl-popup.js?v=4"></script>
+  <script defer src="/luna-translator.js?v=16"></script>
+  <script defer src="/lms.js?v=17"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
 </head>
@@ -34,11 +35,17 @@
         <img src="/samavesh_logo.png" alt="SAMAVESH Logo" style="height: 38px; object-fit: contain;">
       </a>
 
-      <!-- Login Buttons -->
+      <!-- Login & Navigation Items -->
       <ul class="sl-nav-links">
-        <li class="sl-nav-item"><a href="#" class="sl-login-trigger" data-role="student">Student Login</a></li>
-        <li class="sl-nav-item"><a href="#" class="sl-login-trigger" data-role="teacher">Teacher Login</a></li>
-        <li class="sl-nav-item"><a href="#" class="sl-login-trigger" data-role="parent">Parent Portal</a></li>
+        <li class="sl-nav-item"><a href="#" class="sl-login-trigger" data-role="student" data-i18n="nav.student_login">Student Login</a></li>
+        <li class="sl-nav-item"><a href="#" class="sl-login-trigger" data-role="teacher" data-i18n="nav.teacher_login">Teacher Login</a></li>
+        <li class="sl-nav-item"><a href="#" class="sl-login-trigger" data-role="parent" data-i18n="nav.parent_portal">Parent Portal</a></li>
+        <li class="sl-nav-item">
+          <button type="button" class="sl-lang-toggle-btn" id="slLangToggleBtn" onclick="if(window.SamaveshI18n){window.SamaveshI18n.toggleLanguage();}else if(window.toggleLanguage){window.toggleLanguage();}" aria-label="Switch to Gujarati" title="Switch Language / ભાષા બદલો">
+            <span class="sl-lang-globe">🌐</span>
+            <span class="sl-lang-text" id="slLangText">ગુજરાતી</span>
+          </button>
+        </li>
       </ul>
 
       <!-- User Profile Badge (Hidden by default, shown when logged in) -->
@@ -58,17 +65,17 @@
       <!-- Hero Section -->
       <section class="sl-hero">
         <div class="sl-hero-container">
-          <div class="sl-badge-pill">✨ Made for Students</div>
-          <h1> Hands that Learn,<br>Hearts that Connect!</h1>
-          <p>Watch videos, take quizzes, and track your progress – made just for kids.</p>
+          <div class="sl-badge-pill" data-i18n="hero.badge">✨ Made for Students</div>
+          <h1 data-i18n-html="hero.title"> Hands that Learn,<br>Hearts that Connect!</h1>
+          <p data-i18n="hero.desc">Watch videos, take quizzes, and track your progress – made just for kids.</p>
 
           <div class="sl-hero-ctas">
             <button class="sl-btn sl-btn-primary sl-login-trigger" data-role="student"
-              style="font-size:1.1rem; padding: 1rem 2rem;">
+              style="font-size:1.1rem; padding: 1rem 2rem;" data-i18n="hero.btn_student">
               I'm a Student - Sign In
             </button>
             <button class="sl-btn sl-btn-outline sl-login-trigger" data-role="teacher"
-              style="font-size:1.1rem; padding: 1rem 2rem; background: #FFFFFF;">
+              style="font-size:1.1rem; padding: 1rem 2rem; background: #FFFFFF;" data-i18n="hero.btn_teacher">
               I'm a Teacher - Sign In
             </button>
           </div>
@@ -77,12 +84,12 @@
           <div class="sl-hero-mascot-card">
             <div class="sl-mascot-avatar">🦉</div>
             <div class="sl-mascot-speech">
-              <h4>Hi, I'm Kozhi the Owl!</h4>
-              <p>I'll help you learn sign language while you study fun subjects. Are you ready?</p>
+              <h4 data-i18n="hero.mascot_title">Hi, I'm Kozhi the Owl!</h4>
+              <p data-i18n="hero.mascot_desc">I'll help you learn sign language while you study fun subjects. Are you ready?</p>
               <div class="sl-sign-pills">
-                <span class="sl-sign-pill">👋 "Hello"</span>
-                <span class="sl-sign-pill">🧠 "Learn"</span>
-                <span class="sl-sign-pill">🔢 "Math"</span>
+                <span class="sl-sign-pill" data-i18n="hero.pill_hello">👋 "Hello"</span>
+                <span class="sl-sign-pill" data-i18n="hero.pill_learn">🧠 "Learn"</span>
+                <span class="sl-sign-pill" data-i18n="hero.pill_math">🔢 "Math"</span>
               </div>
             </div>
           </div>
@@ -94,24 +101,24 @@
       <!-- How It Works Section -->
       <section class="sl-section">
         <div class="sl-section-title">
-          <h2>How It Works</h2>
-          <p>Start learning in 3 simple steps.</p>
+          <h2 data-i18n="how.title">How It Works</h2>
+          <p data-i18n="how.desc">Start learning in 3 simple steps.</p>
         </div>
         <div class="sl-grid-3">
           <div class="sl-step-card">
             <div class="sl-step-icon sl-icon-blue">🪪</div>
-            <h3>1. Sign In with Your ID</h3>
-            <p>Use your school ID like <strong>STU_01_122</strong> or <strong>PRO1233</strong>.</p>
+            <h3 data-i18n="how.step1_title">1. Sign In with Your ID</h3>
+            <p data-i18n-html="how.step1_desc">Use your school ID like <strong>STU_01_122</strong> or <strong>PRO1233</strong>.</p>
           </div>
           <div class="sl-step-card">
             <div class="sl-step-icon sl-icon-yellow">▶️</div>
-            <h3>2. Watch & Learn</h3>
-            <p>Choose Maths, Language, or Science and watch short videos.</p>
+            <h3 data-i18n="how.step2_title">2. Watch & Learn</h3>
+            <p data-i18n="how.step2_desc">Choose Maths, Language, or Science and watch short videos.</p>
           </div>
           <div class="sl-step-card">
             <div class="sl-step-icon sl-icon-green">🏆</div>
-            <h3>3. Take Quizzes & Grow</h3>
-            <p>Finish each chapter with a quiz and see your progress in your profile.</p>
+            <h3 data-i18n="how.step3_title">3. Take Quizzes & Grow</h3>
+            <p data-i18n="how.step3_desc">Finish each chapter with a quiz and see your progress in your profile.</p>
           </div>
         </div>
       </section>
@@ -122,45 +129,45 @@
       <section class="sl-section"
         style="background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: var(--radius-lg); padding: 3rem 2rem;">
         <div class="sl-section-title">
-          <h2>What You'll Learn</h2>
+          <h2 data-i18n="subjects.title">What You'll Learn</h2>
         </div>
         <div class="sl-grid-3">
           <!-- Maths -->
           <div class="sl-subject-card maths">
             <div class="sl-subject-header">
               <div class="sl-subject-badge-icon" style="background:#FFF9EC; color:#FF9F1C;">🔢</div>
-              <h3>Maths</h3>
+              <h3 data-i18n="subjects.math_title">Maths</h3>
             </div>
-            <p>Numbers, shapes, and fun problems to solve every day.</p>
-            <button class="sl-btn sl-btn-orange sl-login-trigger" data-role="student">Explore Maths</button>
+            <p data-i18n="subjects.math_desc">Numbers, shapes, and fun problems to solve every day.</p>
+            <button class="sl-btn sl-btn-orange sl-login-trigger" data-role="student" data-i18n="subjects.math_btn">Explore Maths</button>
           </div>
           <!-- Language -->
           <div class="sl-subject-card language">
             <div class="sl-subject-header">
               <div class="sl-subject-badge-icon" style="background:#ECFDF5; color:#06D6A0;">📚</div>
-              <h3>Language</h3>
+              <h3 data-i18n="subjects.lang_title">Language</h3>
             </div>
-            <p>Words, sentences, and fun stories in sign language.</p>
-            <button class="sl-btn sl-btn-secondary sl-login-trigger" data-role="student">Explore Language</button>
+            <p data-i18n="subjects.lang_desc">Words, sentences, and fun stories in sign language.</p>
+            <button class="sl-btn sl-btn-secondary sl-login-trigger" data-role="student" data-i18n="subjects.lang_btn">Explore Language</button>
           </div>
           <!-- Science -->
           <div class="sl-subject-card science">
             <div class="sl-subject-header">
               <div class="sl-subject-badge-icon" style="background:#EFF6FF; color:#4A90E2;">🔬</div>
-              <h3>Science</h3>
+              <h3 data-i18n="subjects.sci_title">Science</h3>
             </div>
-            <p>Plants, animals, and discovering how things work.</p>
-            <button class="sl-btn sl-btn-primary sl-login-trigger" data-role="student">Explore Science</button>
+            <p data-i18n="subjects.sci_desc">Plants, animals, and discovering how things work.</p>
+            <button class="sl-btn sl-btn-primary sl-login-trigger" data-role="student" data-i18n="subjects.sci_btn">Explore Science</button>
           </div>
           <!-- Sign Language -->
           <div class="sl-subject-card signlang">
             <div class="sl-subject-header">
               <div class="sl-subject-badge-icon" style="background:#F3E8FF; color:#8338EC;">👋</div>
-              <h3>Sign Language</h3>
+              <h3 data-i18n="subjects.sign_title">Sign Language</h3>
             </div>
-            <p>Learn to communicate with hands, expressions, and gestures.</p>
+            <p data-i18n="subjects.sign_desc">Learn to communicate with hands, expressions, and gestures.</p>
             <button class="sl-btn sl-btn-outline sl-login-trigger" data-role="student"
-              style="color: #8338EC; border-color: #8338EC;">Explore Sign Language</button>
+              style="color: #8338EC; border-color: #8338EC;" data-i18n="subjects.sign_btn">Explore Sign Language</button>
           </div>
         </div>
       </section>
@@ -170,8 +177,8 @@
       <!-- Sign Language Focus Section -->
       <section class="sl-section">
         <div class="sl-lang-focus-box">
-          <h2 style="font-size:2.4rem; font-weight:900; margin-bottom:1rem;">Learn in Your Sign Language</h2>
-          <p style="font-size:1.2rem; color:#CBD5E1; max-width:600px; margin:0 auto;">Our lessons use sign language so
+          <h2 style="font-size:2.4rem; font-weight:900; margin-bottom:1rem;" data-i18n="sign_focus.title">Learn in Your Sign Language</h2>
+          <p style="font-size:1.2rem; color:#CBD5E1; max-width:600px; margin:0 auto;" data-i18n="sign_focus.desc">Our lessons use sign language so
             every child can learn easily and playfully!</p>
 
           <div class="sl-lang-pills-row">
@@ -188,23 +195,23 @@
         <div class="sl-parents-section">
           <div class="sl-parents-grid">
             <div>
-              <h2 style="font-size:2rem; font-weight:800; margin-bottom:1rem;">For Parents & Teachers</h2>
-              <p style="font-size:1.1rem; color:var(--text-muted);">SAMAVESH is built to provide a secure and supervised
+              <h2 style="font-size:2rem; font-weight:800; margin-bottom:1rem;" data-i18n="pt.title">For Parents & Teachers</h2>
+              <p style="font-size:1.1rem; color:var(--text-muted);" data-i18n="pt.desc">SAMAVESH is built to provide a secure and supervised
                 environment for students.</p>
 
               <ul class="sl-check-list">
                 <li>
-                  <div class="sl-check-icon">✓</div> Safe, kid-friendly design.
+                  <div class="sl-check-icon">✓</div> <span data-i18n="pt.check1">Safe, kid-friendly design.</span>
                 </li>
                 <li>
-                  <div class="sl-check-icon">✓</div> Track progress with simple reports.
+                  <div class="sl-check-icon">✓</div> <span data-i18n="pt.check2">Track progress with simple reports.</span>
                 </li>
                 <li>
-                  <div class="sl-check-icon">✓</div> Easy login with school registration numbers.
+                  <div class="sl-check-icon">✓</div> <span data-i18n="pt.check3">Easy login with school registration numbers.</span>
                 </li>
               </ul>
 
-              <button class="sl-btn sl-btn-primary" id="openContactModal" style="margin-top:1rem;">Contact Us</button>
+              <button class="sl-btn sl-btn-primary" id="openContactModal" style="margin-top:1rem;" data-i18n="pt.btn">Contact Us</button>
             </div>
             <div style="text-align:center;">
               <img src="https://images.unsplash.com/photo-1577896851231-70ef18881754?auto=format&fit=crop&q=80&w=600"
@@ -218,11 +225,11 @@
       <!-- Footer -->
       <footer class="sl-footer">
         <div class="sl-footer-links">
-          <a href="#">About</a>
-          <a href="#">Privacy Policy</a>
-          <a href="#">Contact Support</a>
+          <a href="#" data-i18n="footer.about">About</a>
+          <a href="#" data-i18n="footer.privacy">Privacy Policy</a>
+          <a href="#" data-i18n="footer.contact">Contact Support</a>
         </div>
-        <p>Made with ❤️ for students learning sign language.</p>
+        <p data-i18n="footer.tagline">Made with ❤️ for students learning sign language.</p>
       </footer>
     </div>
 
@@ -236,31 +243,31 @@
       <div class="sl-dashboard-container">
         <div class="sl-dash-topbar" style="margin-bottom: 2rem;">
           <div class="sl-dash-welcome">
-            <button class="sl-btn sl-btn-outline" onclick="slCloseVideo()" style="padding: 0.5rem 1rem;">← Back</button>
+            <button class="sl-btn sl-btn-outline" onclick="slCloseVideo()" style="padding: 0.5rem 1rem;" data-i18n="player.back">← Back</button>
           </div>
-          <h2 style="font-size:2rem; font-weight:900;">Student Dashboard</h2>
+          <h2 style="font-size:2rem; font-weight:900;" data-i18n="player.dash_title">Student Dashboard</h2>
           <div style="width: 80px;"></div>
         </div>
 
         <div class="sl-video-split-layout">
           <!-- Left Side: Kozha Avatar -->
           <div class="sl-avatar-pane">
-            <h3 style="margin-bottom:1rem;">Sign Language Translation</h3>
+            <h3 style="margin-bottom:1rem;" data-i18n="player.sign_title">Sign Language Translation</h3>
             <div class="sl-avatar-wrapper">
               <div class="CWASAAvatar av0"></div>
             </div>
-            <div class="sl-captions-box" id="slCaptions">
+            <div class="sl-captions-box" id="slCaptions" data-i18n="player.captions_waiting">
               Waiting for signs...
             </div>
           </div>
 
           <!-- Right Side: Video -->
           <div class="sl-video-pane">
-            <h3 style="margin-bottom:1rem;">Educational Video</h3>
+            <h3 style="margin-bottom:1rem;" data-i18n="player.video_title">Educational Video</h3>
             <div id="slVideoContainer" class="sl-video-placeholder">
               <div style="font-size: 4rem; margin-bottom: 1rem;">▶️</div>
-              <h3>[Educational Video Player]</h3>
-              <p style="color:var(--text-muted)">The video lesson plays here.</p>
+              <h3 data-i18n="player.video_player_holder">[Educational Video Player]</h3>
+              <p style="color:var(--text-muted)" data-i18n="player.video_desc">The video lesson plays here.</p>
             </div>
           </div>
         </div>
@@ -275,14 +282,14 @@
       <button class="sl-modal-close" id="closeAuthModal">✕</button>
 
       <div class="sl-auth-header">
-        <h2 style="font-size:1.8rem; font-weight:900; color:var(--text-main);">Welcome Back!</h2>
-        <p style="color:var(--text-muted); margin-top:0.5rem;">Sign in to continue learning.</p>
+        <h2 style="font-size:1.8rem; font-weight:900; color:var(--text-main);" data-i18n="auth.title">Welcome Back!</h2>
+        <p style="color:var(--text-muted); margin-top:0.5rem;" data-i18n="auth.subtitle">Sign in to continue learning.</p>
       </div>
 
       <div class="sl-auth-tabs">
-        <button class="sl-auth-tab active" data-tab="student">Student</button>
-        <button class="sl-auth-tab" data-tab="teacher">Teacher</button>
-        <button class="sl-auth-tab" data-tab="parent">Parent</button>
+        <button class="sl-auth-tab active" data-tab="student" data-i18n="auth.tab_student">Student</button>
+        <button class="sl-auth-tab" data-tab="teacher" data-i18n="auth.tab_teacher">Teacher</button>
+        <button class="sl-auth-tab" data-tab="parent" data-i18n="auth.tab_parent">Parent</button>
       </div>
 
       <form id="slAuthForm" autocomplete="off">
@@ -298,7 +305,7 @@
         </div>
 
         <button type="submit" class="sl-btn sl-btn-primary"
-          style="width:100%; justify-content:center; font-size:1.1rem; padding:1rem; margin-top:1.5rem;">Sign
+          style="width:100%; justify-content:center; font-size:1.1rem; padding:1rem; margin-top:1.5rem;" data-i18n="auth.btn_submit">Sign
           In</button>
       </form>
     </div>
@@ -310,8 +317,8 @@
       <button class="sl-modal-close" id="closeContactModal">✕</button>
 
       <div class="sl-auth-header" style="margin-bottom: 1.5rem;">
-        <h2 style="font-size:1.8rem; font-weight:900; color:var(--text-main);">Contact Us</h2>
-        <p style="color:var(--text-muted); margin-top:0.4rem;">We're here to help students, parents, and educators.</p>
+        <h2 style="font-size:1.8rem; font-weight:900; color:var(--text-main);" data-i18n="contact.title">Contact Us</h2>
+        <p style="color:var(--text-muted); margin-top:0.4rem;" data-i18n="contact.subtitle">We're here to help students, parents, and educators.</p>
       </div>
 
       <div style="display: flex; flex-direction: column; gap: 1rem; text-align: left;">
@@ -321,7 +328,7 @@
             style="background: #EFF6FF; color: var(--primary); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
             ✉️</div>
           <div>
-            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
+            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" data-i18n="contact.support_label">
               General Support</div>
             <a href="mailto:support@samavesh.com"
               style="font-weight: 700; color: var(--primary); text-decoration: none; font-size: 1.05rem;">support@samavesh.com</a>
@@ -334,7 +341,7 @@
             style="background: #ECFDF5; color: #06D6A0; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
             🏫</div>
           <div>
-            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
+            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" data-i18n="contact.school_label">
               School & Teacher Inquiries</div>
             <a href="mailto:schools@samavesh.com"
               style="font-weight: 700; color: #06D6A0; text-decoration: none; font-size: 1.05rem;">schools@samavesh.com</a>
@@ -347,10 +354,10 @@
             style="background: #FFF9EC; color: #FF9F1C; width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
             📞</div>
           <div>
-            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">
+            <div style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" data-i18n="contact.phone_label">
               Helpline & Phone</div>
             <div style="font-weight: 700; color: var(--text-main); font-size: 1.05rem;">+91 12345 67890</div>
-            <div style="font-size: 0.8rem; color: var(--text-muted);">Mon – Sat: 9:00 AM – 6:00 PM IST</div>
+            <div style="font-size: 0.8rem; color: var(--text-muted);" data-i18n="contact.timing">Mon – Sat: 9:00 AM – 6:00 PM IST</div>
           </div>
         </div>
       </div>

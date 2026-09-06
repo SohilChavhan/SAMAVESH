@@ -14,14 +14,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const authForm = document.getElementById("slAuthForm");
     const authError = document.getElementById("slAuthError");
     const profileBadge = document.getElementById("slProfileBadge");
+    const langToggleBtn = document.getElementById("slLangToggleBtn");
 
     const landingView = document.getElementById("slLandingView");
     const dashView = document.getElementById("slDashboardView");
 
     const API_BASE = (window.location.port === '8080' || window.location.port === '5500') ? 'http://localhost:8000' : '';
 
+    // Translation helper
+    const t = (k, vars) => (window.SamaveshI18n ? window.SamaveshI18n.t(k, vars) : k);
+
     // Initialize
     initSession();
+
+    // Language Toggle Event Listener
+    if (langToggleBtn) {
+        langToggleBtn.addEventListener("click", (e) => {
+            e.preventDefault();
+            if (window.SamaveshI18n) {
+                window.SamaveshI18n.toggleLanguage();
+            }
+        });
+    }
+
+    // Reactive handler when language switches
+    window.onSamaveshLanguageChange = function (newLang) {
+        if (STATE.user) {
+            renderUI();
+        }
+        const activeTab = document.querySelector(".sl-auth-tab.active");
+        if (activeTab) {
+            setActiveAuthTab(activeTab.dataset.tab);
+        }
+    };
 
     // Event Listeners
     loginBtns.forEach(btn => btn.addEventListener("click", (e) => {
@@ -94,17 +119,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (role === "student") {
-            inputLabel.innerText = "Student ID";
-            inputHint.innerText = "Format: STU_<year>_<roll> (e.g. STU_01_122)";
-            if (inputReg) inputReg.placeholder = "e.g. STU_01_122";
+            if (inputLabel) inputLabel.innerText = t("auth.label_student");
+            if (inputHint) inputHint.innerText = t("auth.hint_student");
+            if (inputReg) inputReg.placeholder = t("auth.placeholder_student");
         } else if (role === "teacher") {
-            inputLabel.innerText = "Teacher ID";
-            inputHint.innerText = "Format: PRO_<id> (e.g. PRO_1233)";
-            if (inputReg) inputReg.placeholder = "e.g. PRO_1233";
+            if (inputLabel) inputLabel.innerText = t("auth.label_teacher");
+            if (inputHint) inputHint.innerText = t("auth.hint_teacher");
+            if (inputReg) inputReg.placeholder = t("auth.placeholder_teacher");
         } else {
-            inputLabel.innerText = "Parent Email or ID";
-            inputHint.innerText = "Enter your registered email address";
-            if (inputReg) inputReg.placeholder = "Your Registered Email ID";
+            if (inputLabel) inputLabel.innerText = t("auth.label_parent");
+            if (inputHint) inputHint.innerText = t("auth.hint_parent");
+            if (inputReg) inputReg.placeholder = t("auth.placeholder_parent");
         }
         document.getElementById("authRole").value = role;
         if (authError) authError.style.display = "none";
@@ -219,19 +244,19 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="sl-dashboard-container">
                 <div class="sl-dash-topbar">
                     <div class="sl-dash-welcome">
-                        <h2>Welcome back, ${STATE.user.name}! 🌟</h2>
-                        <p style="color:var(--text-muted)">${STATE.user.grade} | Ready to learn?</p>
+                        <h2>${t('student.welcome', { name: STATE.user.name })}</h2>
+                        <p style="color:var(--text-muted)">${t('student.ready', { grade: STATE.user.grade || 'Grade 3' })}</p>
                     </div>
                     <div>
-                        <button class="sl-btn sl-btn-outline" id="btnProfileModal">My Profile & Scores</button>
+                        <button class="sl-btn sl-btn-outline" id="btnProfileModal">${t('student.profile_btn')}</button>
                     </div>
                 </div>
 
                 <div class="sl-subject-nav" id="subjectNav">
-                    <div class="sl-subject-tab active maths" data-subj="maths">📐 Maths</div>
-                    <div class="sl-subject-tab language" data-subj="language">📚 Language</div>
-                    <div class="sl-subject-tab science" data-subj="science">🔬 Science</div>
-                    <div class="sl-subject-tab signlang" data-subj="signlang">👋 Sign Language</div>
+                    <div class="sl-subject-tab active maths" data-subj="maths">${t('student.tab_math')}</div>
+                    <div class="sl-subject-tab language" data-subj="language">${t('student.tab_lang')}</div>
+                    <div class="sl-subject-tab science" data-subj="science">${t('student.tab_sci')}</div>
+                    <div class="sl-subject-tab signlang" data-subj="signlang">${t('student.tab_sign')}</div>
                 </div>
 
                 <div id="courseContent"></div>
@@ -262,10 +287,18 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderCourseContent(subject) {
         const contentDiv = document.getElementById("courseContent");
 
+        const subjectNames = {
+            maths: t('subjects.math_title'),
+            language: t('subjects.lang_title'),
+            science: t('subjects.sci_title'),
+            signlang: t('subjects.sign_title')
+        };
+        const currentSubjName = subjectNames[subject] || subject;
+
         const chapters = [
-            { id: 1, title: "Chapter 1: The Basics", icon: "⭐" },
-            { id: 2, title: "Chapter 2: Moving Forward", icon: "🚀" },
-            { id: 3, title: "Chapter 3: Master Challenge", icon: "🏆" }
+            { id: 1, title: t('chapters.ch1'), icon: "⭐" },
+            { id: 2, title: t('chapters.ch2'), icon: "🚀" },
+            { id: 3, title: t('chapters.ch3'), icon: "🏆" }
         ];
 
         let html = '';
@@ -276,33 +309,37 @@ document.addEventListener("DOMContentLoaded", () => {
                 videoListHtml = `
                     <div class="sl-video-list">
                         <div class="sl-video-item" onclick="slPlayVideo('${subject}', ${ch.id}, 'playlist:PLFjydPMg4Dapq9vcdmGyHs8uJhiqMgUrX')">
-                            <div><strong>Video 1:</strong> Sign Language Tutorial (Playlist)</div>
-                            <div>▶️ Play</div>
+                            <div><strong>Video 1:</strong> ${t('videos.vid1_sign')}</div>
+                            <div>${t('videos.play')}</div>
                         </div>
                         <div class="sl-video-item" style="cursor: default; opacity: 0.6;">
-                            <div><strong>Placeholder 2:</strong> Video coming soon</div>
-                            <div>⏳ Pending</div>
+                            <div><strong>Placeholder 2:</strong> ${t('videos.coming_soon')}</div>
+                            <div>${t('videos.pending')}</div>
                         </div>
                         <div class="sl-video-item" style="cursor: default; opacity: 0.6;">
-                            <div><strong>Placeholder 3:</strong> Video coming soon</div>
-                            <div>⏳ Pending</div>
+                            <div><strong>Placeholder 3:</strong> ${t('videos.coming_soon')}</div>
+                            <div>${t('videos.pending')}</div>
                         </div>
                     </div>
                 `;
             } else {
+                const vid1Title = (subject === 'maths' && ch.id === 1)
+                    ? t('videos.vid1_math')
+                    : t('videos.vid1_general', { subject: currentSubjName });
+
                 videoListHtml = `
                     <div class="sl-video-list">
                         <div class="sl-video-item" onclick="slPlayVideo('${subject}', ${ch.id}, ${subject === 'maths' && ch.id === 1 ? "'mjlsSYLLOSE'" : "'v1'"})">
-                            <div><strong>Video 1:</strong> ${subject === 'maths' && ch.id === 1 ? 'Introduction to Basics (YouTube)' : 'Introduction to ' + subject}</div>
-                            <div>▶️ Play</div>
+                            <div><strong>Video 1:</strong> ${vid1Title}</div>
+                            <div>${t('videos.play')}</div>
                         </div>
                         <div class="sl-video-item" onclick="slPlayVideo('${subject}', ${ch.id}, 'v2')">
-                            <div><strong>Video 2:</strong> Learning the Signs</div>
-                            <div>▶️ Play</div>
+                            <div><strong>Video 2:</strong> ${t('videos.vid2')}</div>
+                            <div>${t('videos.play')}</div>
                         </div>
                         <div class="sl-video-item" onclick="slPlayVideo('${subject}', ${ch.id}, 'v3')">
-                            <div><strong>Video 3:</strong> Practice with Friends</div>
-                            <div>▶️ Play</div>
+                            <div><strong>Video 3:</strong> ${t('videos.vid3')}</div>
+                            <div>${t('videos.play')}</div>
                         </div>
                     </div>
                 `;
@@ -319,7 +356,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     </div>
                     <div class="sl-chapter-content" id="ch-${subject}-${ch.id}">
                         ${videoListHtml}
-                        <button class="sl-btn sl-btn-primary" onclick="slStartQuiz('${subject}', ${ch.id})">🏆 Take Chapter Quiz</button>
+                        <button class="sl-btn sl-btn-primary" onclick="slStartQuiz('${subject}', ${ch.id})">${t('videos.quiz_btn')}</button>
                     </div>
                 </div>
             `;
@@ -618,41 +655,48 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderTeacherDashboard() {
         // 1. Mock Database of Students
         const mockStudents = [
-            { id: "STU_01_122", name: "Aarav Sharma", grade: "Grade 3", progress: "88%", status: "On Track", lastActive: "Today" },
-            { id: "STU_01_123", name: "Diya Patel", grade: "Grade 3", progress: "95%", status: "Excelling", lastActive: "Yesterday" },
-            { id: "STU_01_124", name: "Kabir Singh", grade: "Grade 3", progress: "45%", status: "Needs Help", lastActive: "3 days ago" },
-            { id: "STU_01_125", name: "Ananya Iyer", grade: "Grade 3", progress: "72%", status: "On Track", lastActive: "Today" },
-            { id: "STU_01_126", name: "Rohan Gupta", grade: "Grade 3", progress: "10%", status: "Inactive", lastActive: "1 week ago" }
+            { id: "STU_01_122", name: "Aarav Sharma", grade: "Grade 3", progress: "88%", statusKey: "teacher.status_ontrack", statusFallback: "On Track", lastActiveKey: "teacher.today" },
+            { id: "STU_01_123", name: "Diya Patel", grade: "Grade 3", progress: "95%", statusKey: "teacher.status_excelling", statusFallback: "Excelling", lastActiveKey: "teacher.yesterday" },
+            { id: "STU_01_124", name: "Kabir Singh", grade: "Grade 3", progress: "45%", statusKey: "teacher.status_needshelp", statusFallback: "Needs Help", lastActiveText: t("teacher.days_ago", { n: 3 }) },
+            { id: "STU_01_125", name: "Ananya Iyer", grade: "Grade 3", progress: "72%", statusKey: "teacher.status_ontrack", statusFallback: "On Track", lastActiveKey: "teacher.today" },
+            { id: "STU_01_126", name: "Rohan Gupta", grade: "Grade 3", progress: "10%", statusKey: "teacher.status_inactive", statusFallback: "Inactive", lastActiveKey: "teacher.week_ago" }
         ];
+
+        function getStudentStatusLabel(student) {
+            return t(student.statusKey) || student.statusFallback;
+        }
+
+        function getStudentLastActive(student) {
+            if (student.lastActiveKey) return t(student.lastActiveKey);
+            return student.lastActiveText || "Today";
+        }
 
         // 2. Generate HTML Table Rows for each student
         const studentRows = mockStudents.map(student => {
-            // Determine badge styling based on their performance status
             let badgeBg = "#EFF6FF";
-            let badgeColor = "#1E3A8A"; // Default / On Track (Blue)
-            if (student.status === "Excelling") { badgeBg = "#ECFDF5"; badgeColor = "#065F46"; } // Green
-            if (student.status === "Needs Help") { badgeBg = "#FEF2F2"; badgeColor = "#991B1B"; } // Red
-            if (student.status === "Inactive") { badgeBg = "#F1F5F9"; badgeColor = "#475569"; }   // Gray
+            let badgeColor = "#1E3A8A";
+            if (student.statusKey === "teacher.status_excelling") { badgeBg = "#ECFDF5"; badgeColor = "#065F46"; }
+            if (student.statusKey === "teacher.status_needshelp") { badgeBg = "#FEF2F2"; badgeColor = "#991B1B"; }
+            if (student.statusKey === "teacher.status_inactive") { badgeBg = "#F1F5F9"; badgeColor = "#475569"; }
 
             return `
                 <tr style="border-bottom: 1px solid #E2E8F0;">
                     <td style="padding: 1rem; font-weight:600; color:var(--text-main);">${student.id}</td>
                     <td style="padding: 1rem;">${student.name}</td>
                     <td style="padding: 1rem;">
-                        <!-- Mini Progress Bar -->
                         <div style="width: 100%; background: #E2E8F0; border-radius: 999px; height: 8px; margin-bottom: 4px;">
                             <div style="width: ${student.progress}; background: #06D6A0; height: 8px; border-radius: 999px;"></div>
                         </div>
-                        <span style="font-size: 0.85rem; color: var(--text-muted);">${student.progress} Completed</span>
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">${student.progress} ${t('teacher.completed')}</span>
                     </td>
                     <td style="padding: 1rem;">
                         <span style="background: ${badgeBg}; color: ${badgeColor}; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600;">
-                            ${student.status}
+                            ${getStudentStatusLabel(student)}
                         </span>
                     </td>
-                    <td style="padding: 1rem; color: var(--text-muted); font-size: 0.9rem;">${student.lastActive}</td>
+                    <td style="padding: 1rem; color: var(--text-muted); font-size: 0.9rem;">${getStudentLastActive(student)}</td>
                     <td style="padding: 1rem; text-align: right;">
-                        <button class="sl-btn sl-btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="slViewStudent('${student.id}')">View Details</button>
+                        <button class="sl-btn sl-btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="slViewStudent('${student.id}')">${t('teacher.btn_details')}</button>
                     </td>
                 </tr>
             `;
@@ -663,26 +707,26 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="sl-dashboard-container">
                 <div class="sl-dash-topbar">
                     <div class="sl-dash-welcome">
-                        <h2>Teacher Portal</h2>
-                        <p style="color:var(--text-muted)">Welcome back, ${STATE.user.name}. Here is your class overview.</p>
+                        <h2>${t('teacher.portal')}</h2>
+                        <p style="color:var(--text-muted)">${t('teacher.welcome', { name: STATE.user.name })}</p>
                     </div>
                     <div>
-                        <button class="sl-btn sl-btn-secondary" onclick="slExportPDF()">📥 Export Class Report</button>
+                        <button class="sl-btn sl-btn-secondary" onclick="slExportPDF()">${t('teacher.export_pdf')}</button>
                     </div>
                 </div>
 
                 <!-- Stats Overview Cards -->
                 <div class="sl-grid-3" style="margin-bottom: 2rem;">
                     <div class="sl-chapter-card" style="padding:1.5rem; border-left: 4px solid #4A90E2;">
-                        <h3 style="color:var(--text-muted); font-size:1rem; margin-bottom:0.5rem;">Average Quiz Score</h3>
+                        <h3 style="color:var(--text-muted); font-size:1rem; margin-bottom:0.5rem;">${t('teacher.stat_avg')}</h3>
                         <p style="font-size: 2rem; font-weight: 900;">84%</p>
                     </div>
                     <div class="sl-chapter-card" style="padding:1.5rem; border-left: 4px solid #FF9F1C;">
-                        <h3 style="color:var(--text-muted); font-size:1rem; margin-bottom:0.5rem;">Students Needing Help</h3>
+                        <h3 style="color:var(--text-muted); font-size:1rem; margin-bottom:0.5rem;">${t('teacher.stat_help')}</h3>
                         <p style="font-size: 2rem; font-weight: 900;">2</p>
                     </div>
                     <div class="sl-chapter-card" style="padding:1.5rem; border-left: 4px solid #06D6A0;">
-                        <h3 style="color:var(--text-muted); font-size:1rem; margin-bottom:0.5rem;">Recent Submissions</h3>
+                        <h3 style="color:var(--text-muted); font-size:1rem; margin-bottom:0.5rem;">${t('teacher.stat_recent')}</h3>
                         <p style="font-size: 2rem; font-weight: 900;">12</p>
                     </div>
                 </div>
@@ -690,19 +734,19 @@ document.addEventListener("DOMContentLoaded", () => {
                 <!-- Interactive Student List Table -->
                 <div class="sl-chapter-card" style="padding: 2rem; overflow-x: auto;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-                        <h3 style="font-size: 1.4rem; font-weight: 800;">Student Roster</h3>
-                        <input type="text" id="teacherSearchInput" placeholder="Search students by name or ID..." style="padding: 0.6rem 1rem; border: 1px solid #CBD5E1; border-radius: 8px; width: 300px; font-family: inherit;">
+                        <h3 style="font-size: 1.4rem; font-weight: 800;">${t('teacher.roster_title')}</h3>
+                        <input type="text" id="teacherSearchInput" placeholder="${t('teacher.search_ph')}" style="padding: 0.6rem 1rem; border: 1px solid #CBD5E1; border-radius: 8px; width: 300px; font-family: inherit;">
                     </div>
                     
                     <table style="width: 100%; border-collapse: collapse; text-align: left;">
                         <thead>
                             <tr style="border-bottom: 2px solid #E2E8F0; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase;">
-                                <th style="padding: 1rem; font-weight: 800;">Student ID</th>
-                                <th style="padding: 1rem; font-weight: 800;">Name</th>
-                                <th style="padding: 1rem; font-weight: 800;">Course Progress</th>
-                                <th style="padding: 1rem; font-weight: 800;">Status</th>
-                                <th style="padding: 1rem; font-weight: 800;">Last Active</th>
-                                <th style="padding: 1rem; font-weight: 800; text-align: right;">Actions</th>
+                                <th style="padding: 1rem; font-weight: 800;">${t('teacher.th_id')}</th>
+                                <th style="padding: 1rem; font-weight: 800;">${t('teacher.th_name')}</th>
+                                <th style="padding: 1rem; font-weight: 800;">${t('teacher.th_prog')}</th>
+                                <th style="padding: 1rem; font-weight: 800;">${t('teacher.th_status')}</th>
+                                <th style="padding: 1rem; font-weight: 800;">${t('teacher.th_active')}</th>
+                                <th style="padding: 1rem; font-weight: 800; text-align: right;">${t('teacher.th_actions')}</th>
                             </tr>
                         </thead>
                         <tbody id="teacherRosterBody">
@@ -722,7 +766,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 rosterBody.innerHTML = `
                     <tr>
                         <td colspan="6" style="padding: 2rem; text-align: center; color: var(--text-muted);">
-                            No students found matching your search.
+                            ${t('teacher.no_students')}
                         </td>
                     </tr>`;
                 return;
@@ -730,9 +774,9 @@ document.addEventListener("DOMContentLoaded", () => {
             rosterBody.innerHTML = studentsList.map(student => {
                 let badgeBg = "#EFF6FF";
                 let badgeColor = "#1E3A8A";
-                if (student.status === "Excelling") { badgeBg = "#ECFDF5"; badgeColor = "#065F46"; }
-                if (student.status === "Needs Help") { badgeBg = "#FEF2F2"; badgeColor = "#991B1B"; }
-                if (student.status === "Inactive") { badgeBg = "#F1F5F9"; badgeColor = "#475569"; }
+                if (student.statusKey === "teacher.status_excelling") { badgeBg = "#ECFDF5"; badgeColor = "#065F46"; }
+                if (student.statusKey === "teacher.status_needshelp") { badgeBg = "#FEF2F2"; badgeColor = "#991B1B"; }
+                if (student.statusKey === "teacher.status_inactive") { badgeBg = "#F1F5F9"; badgeColor = "#475569"; }
 
                 return `
                     <tr style="border-bottom: 1px solid #E2E8F0;">
@@ -742,16 +786,16 @@ document.addEventListener("DOMContentLoaded", () => {
                             <div style="width: 100%; background: #E2E8F0; border-radius: 999px; height: 8px; margin-bottom: 4px;">
                                 <div style="width: ${student.progress}; background: #06D6A0; height: 8px; border-radius: 999px;"></div>
                             </div>
-                            <span style="font-size: 0.85rem; color: var(--text-muted);">${student.progress} Completed</span>
+                            <span style="font-size: 0.85rem; color: var(--text-muted);">${student.progress} ${t('teacher.completed')}</span>
                         </td>
                         <td style="padding: 1rem;">
                             <span style="background: ${badgeBg}; color: ${badgeColor}; padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.85rem; font-weight: 600;">
-                                ${student.status}
+                                ${getStudentStatusLabel(student)}
                             </span>
                         </td>
-                        <td style="padding: 1rem; color: var(--text-muted); font-size: 0.9rem;">${student.lastActive}</td>
+                        <td style="padding: 1rem; color: var(--text-muted); font-size: 0.9rem;">${getStudentLastActive(student)}</td>
                         <td style="padding: 1rem; text-align: right;">
-                            <button class="sl-btn sl-btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="slViewStudent('${student.id}')">View Details</button>
+                            <button class="sl-btn sl-btn-outline" style="padding: 0.4rem 0.8rem; font-size: 0.85rem;" onclick="slViewStudent('${student.id}')">${t('teacher.btn_details')}</button>
                         </td>
                     </tr>
                 `;
@@ -775,31 +819,31 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="sl-dashboard-container">
                 <div class="sl-dash-topbar">
                     <div class="sl-dash-welcome">
-                        <h2>Parent Dashboard</h2>
-                        <p style="color:var(--text-muted)">Welcome, ${STATE.user.name}.</p>
+                        <h2>${t('parent.title')}</h2>
+                        <p style="color:var(--text-muted)">${t('parent.welcome', { name: STATE.user.name })}</p>
                     </div>
                     <div style="display:flex; gap:0.75rem; flex-wrap:wrap;">
-                        <button class="sl-btn sl-btn-primary" onclick="slOpenParentProgressModal()">📊 View Progress Summary</button>
-                        <button class="sl-btn sl-btn-outline" onclick="slToast('Profile management feature coming soon!', 'info')">Manage Child Profiles</button>
+                        <button class="sl-btn sl-btn-primary" onclick="slOpenParentProgressModal()">${t('parent.btn_view_summary')}</button>
+                        <button class="sl-btn sl-btn-outline" onclick="slToast('${t('parent.btn_manage')}', 'info')">${t('parent.btn_manage')}</button>
                     </div>
                 </div>
 
                 <div class="sl-grid-3">
                     <div class="sl-chapter-card" style="padding:1.5rem;">
                         <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⏳</div>
-                        <h3 style="font-size:1.2rem; font-weight:800; margin-bottom:0.4rem; color:var(--text-main);">Screen Time Limits</h3>
-                        <p style="color:var(--text-muted); margin-bottom:1rem;">Daily limit: 1.5 hours</p>
+                        <h3 style="font-size:1.2rem; font-weight:800; margin-bottom:0.4rem; color:var(--text-main);">${t('parent.screen_title')}</h3>
+                        <p style="color:var(--text-muted); margin-bottom:1rem;">${t('parent.daily_limit')}</p>
                         <div style="background:#F1F5F9; border-radius:10px; padding:0.6rem 0.8rem; font-size:0.85rem; font-weight:600; color:var(--text-main);">
-                            Used Today: <span style="color:#4A90E2; font-weight:800;">45 mins</span> (45m remaining)
+                            ${t('parent.used_today')}<span style="color:#4A90E2; font-weight:800;">${t('parent.mins_rem')}</span>
                         </div>
                     </div>
 
                     <div class="sl-chapter-card" style="padding:1.5rem;">
                         <div style="font-size: 1.5rem; margin-bottom: 0.5rem;">⭐</div>
-                        <h3 style="font-size:1.2rem; font-weight:800; margin-bottom:0.4rem; color:var(--text-main);">Weekly Report</h3>
-                        <p style="color:var(--text-muted); margin-bottom:1rem;">Your child earned 12 stars this week!</p>
+                        <h3 style="font-size:1.2rem; font-weight:800; margin-bottom:0.4rem; color:var(--text-main);">${t('parent.report_title')}</h3>
+                        <p style="color:var(--text-muted); margin-bottom:1rem;">${t('parent.stars_earned')}</p>
                         <div style="background:#FFF9EC; border-radius:10px; padding:0.6rem 0.8rem; font-size:0.85rem; font-weight:600; color:#B45309;">
-                            Achievement: <span style="font-weight:800;">7-Day Study Streak 🔥</span>
+                            ${t('parent.achievement')}<span style="font-weight:800;">${t('parent.streak')}</span>
                         </div>
                     </div>
 
@@ -807,11 +851,11 @@ document.addEventListener("DOMContentLoaded", () => {
                         <div>
                             <div style="display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;">
                                 <span style="font-size: 1.3rem;">📊</span>
-                                <h3 style="font-size:1.2rem; font-weight:800; margin:0; color:#1D2D44;">Progress Summary</h3>
+                                <h3 style="font-size:1.2rem; font-weight:800; margin:0; color:#1D2D44;">${t('parent.prog_title')}</h3>
                             </div>
-                            <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.5; margin-bottom:1.5rem;">Track your child's learning journey across all subjects.</p>
+                            <p style="color:var(--text-muted); font-size:0.95rem; line-height:1.5; margin-bottom:1.5rem;">${t('parent.prog_desc')}</p>
                         </div>
-                        <button class="sl-btn-progress-details" onclick="slOpenParentProgressModal()">View Details</button>
+                        <button class="sl-btn-progress-details" onclick="slOpenParentProgressModal()">${t('parent.btn_view_details')}</button>
                     </div>
                 </div>
 
@@ -827,10 +871,10 @@ document.addEventListener("DOMContentLoaded", () => {
     // Logout
     profileBadge.addEventListener("click", () => {
         slConfirm({
-            title: "Log Out",
-            message: "Do you want to log out of your session?",
-            confirmText: "Log Out",
-            cancelText: "Cancel",
+            title: t("popup.logout_title"),
+            message: t("popup.logout_msg"),
+            confirmText: t("popup.btn_logout"),
+            cancelText: t("popup.btn_cancel"),
             icon: "logout",
             danger: true
         }).then(confirmed => {
@@ -844,7 +888,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     STATE.lunaTranslator = null;
                 }
                 showLanding();
-                slToast("You have been logged out.", "info");
+                slToast(t("popup.toast_logout"), "info");
             }
         });
     });
@@ -921,12 +965,13 @@ window.slExportPDF = function () {
     doc.save("Samavesh_Class_Report.pdf");
 };
 window.slViewStudent = function (studentId) {
+    const t = (k, v) => (window.SamaveshI18n ? window.SamaveshI18n.t(k, v) : k);
     const mockStudents = [
-        { id: "STU_01_122", name: "Aarav Sharma", grade: "Grade 3", progress: "88%", status: "On Track", lastActive: "Today" },
-        { id: "STU_01_123", name: "Diya Patel", grade: "Grade 3", progress: "95%", status: "Excelling", lastActive: "Yesterday" },
-        { id: "STU_01_124", name: "Kabir Singh", grade: "Grade 3", progress: "45%", status: "Needs Help", lastActive: "3 days ago" },
-        { id: "STU_01_125", name: "Ananya Iyer", grade: "Grade 3", progress: "72%", status: "On Track", lastActive: "Today" },
-        { id: "STU_01_126", name: "Rohan Gupta", grade: "Grade 3", progress: "10%", status: "Inactive", lastActive: "1 week ago" }
+        { id: "STU_01_122", name: "Aarav Sharma", grade: "Grade 3", progress: "88%", statusKey: "teacher.status_ontrack", statusFallback: "On Track", lastActiveKey: "teacher.today" },
+        { id: "STU_01_123", name: "Diya Patel", grade: "Grade 3", progress: "95%", statusKey: "teacher.status_excelling", statusFallback: "Excelling", lastActiveKey: "teacher.yesterday" },
+        { id: "STU_01_124", name: "Kabir Singh", grade: "Grade 3", progress: "45%", statusKey: "teacher.status_needshelp", statusFallback: "Needs Help", lastActiveText: t("teacher.days_ago", { n: 3 }) },
+        { id: "STU_01_125", name: "Ananya Iyer", grade: "Grade 3", progress: "72%", statusKey: "teacher.status_ontrack", statusFallback: "On Track", lastActiveKey: "teacher.today" },
+        { id: "STU_01_126", name: "Rohan Gupta", grade: "Grade 3", progress: "10%", statusKey: "teacher.status_inactive", statusFallback: "Inactive", lastActiveKey: "teacher.week_ago" }
     ];
 
     const student = mockStudents.find(s => s.id === studentId);
@@ -940,6 +985,9 @@ window.slViewStudent = function (studentId) {
         modal.style.display = "none";
         document.body.appendChild(modal);
     }
+
+    const statusLabel = t(student.statusKey) || student.statusFallback;
+    const lastActiveLabel = student.lastActiveKey ? t(student.lastActiveKey) : (student.lastActiveText || "Today");
 
     modal.innerHTML = `
         <div class="sl-auth-card" style="max-width: 500px; width: 100%;">
@@ -959,16 +1007,16 @@ window.slViewStudent = function (studentId) {
             
             <div style="background: #F8FAFC; padding: 1.5rem; border-radius: 12px; margin-bottom: 1.5rem;">
                 <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-                    <span style="font-weight: 600; color: var(--text-muted);">Current Progress</span>
+                    <span style="font-weight: 600; color: var(--text-muted);">${t('teacher.th_prog')}</span>
                     <span style="font-weight: 800; color: #06D6A0;">${student.progress}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between; margin-bottom: 1rem;">
-                    <span style="font-weight: 600; color: var(--text-muted);">System Status</span>
-                    <span style="font-weight: 800;">${student.status}</span>
+                    <span style="font-weight: 600; color: var(--text-muted);">${t('teacher.th_status')}</span>
+                    <span style="font-weight: 800;">${statusLabel}</span>
                 </div>
                 <div style="display: flex; justify-content: space-between;">
-                    <span style="font-weight: 600; color: var(--text-muted);">Last Active</span>
-                    <span style="font-weight: 800;">${student.lastActive}</span>
+                    <span style="font-weight: 600; color: var(--text-muted);">${t('teacher.th_active')}</span>
+                    <span style="font-weight: 800;">${lastActiveLabel}</span>
                 </div>
             </div>
 
@@ -989,6 +1037,9 @@ window.slViewStudent = function (studentId) {
 };
 
 window.slOpenParentProgressModal = function () {
+    const t = (k, v) => (window.SamaveshI18n ? window.SamaveshI18n.t(k, v) : k);
+    const isGu = (window.SamaveshI18n && window.SamaveshI18n.getLanguage() === 'gu');
+
     let modal = document.getElementById("slParentProgressModal");
     if (!modal) {
         modal = document.createElement("div");
@@ -999,28 +1050,65 @@ window.slOpenParentProgressModal = function () {
     }
 
     const mockData = {
-        childName: "Aarav Sharma",
-        grade: "Grade 1 • Section B",
+        childName: isGu ? "આરવ શર્મા" : "Aarav Sharma",
+        grade: isGu ? "ધોરણ ૧ • વર્ગ બ" : "Grade 1 • Section B",
         studentId: "STU_01_122",
-        school: "Delhi Public School, Primary Wing",
+        school: isGu ? "દિલ્હી પબ્લિક સ્કૂલ, પ્રાથમિક વિભાગ" : "Delhi Public School, Primary Wing",
         overallProgress: 88,
-        totalTime: "14h 35m",
-        quizzesPassed: "12 / 15",
+        totalTime: isGu ? "૧૪ કલાક ૩૫ મિનિટ" : "14h 35m",
+        quizzesPassed: isGu ? "૧૨ / ૧૫" : "12 / 15",
         starsEarned: 48,
         streakDays: 7,
-        teacherName: "Mrs. Radhika Sharma",
+        teacherName: isGu ? "શ્રીમતી રાધિકા શર્મા" : "Mrs. Radhika Sharma",
         subjects: [
-            { name: "📐 Mathematics", progress: 88, color: "#4A90E2", detail: "8 / 9 Lessons completed • Quiz avg score 92%" },
-            { name: "📚 English Language", progress: 92, color: "#FF9F1C", detail: "9 / 9 Lessons completed • Quiz avg score 95%" },
-            { name: "🔬 Environmental Science", progress: 75, color: "#8338EC", detail: "6 / 9 Lessons completed • Quiz avg score 80%" },
-            { name: "👋 Indian Sign Language", progress: 95, color: "#06D6A0", detail: "10 / 10 Lessons completed • Quiz avg score 98%" }
+            {
+                name: isGu ? "📐 ગણિત" : "📐 Mathematics",
+                progress: 88,
+                color: "#4A90E2",
+                detail: isGu ? "૮ / ૯ પાઠ પૂર્ણ • ક્વિઝ સરેરાશ સ્કોર ૯૨%" : "8 / 9 Lessons completed • Quiz avg score 92%"
+            },
+            {
+                name: isGu ? "📚 અંગ્રેજી ભાષા" : "📚 English Language",
+                progress: 92,
+                color: "#FF9F1C",
+                detail: isGu ? "૯ / ૯ પાઠ પૂર્ણ • ક્વિઝ સરેરાશ સ્કોર ૯૫%" : "9 / 9 Lessons completed • Quiz avg score 95%"
+            },
+            {
+                name: isGu ? "🔬 પર્યાવરણ વિજ્ઞાન" : "🔬 Environmental Science",
+                progress: 75,
+                color: "#8338EC",
+                detail: isGu ? "૬ / ૯ પાઠ પૂર્ણ • ક્વિઝ સરેરાશ સ્કોર ૮૦%" : "6 / 9 Lessons completed • Quiz avg score 80%"
+            },
+            {
+                name: isGu ? "👋 ભારતીય સાંકેતિક ભાષા (ISL)" : "👋 Indian Sign Language",
+                progress: 95,
+                color: "#06D6A0",
+                detail: isGu ? "૧૦ / ૧૦ પાઠ પૂર્ણ • ક્વિઝ સરેરાશ સ્કોર ૯૮%" : "10 / 10 Lessons completed • Quiz avg score 98%"
+            }
         ],
         recentMilestones: [
-            { icon: "🏆", title: "Mastered ISL Alphabet Signs", date: "Yesterday, 4:30 PM", badge: "100% Score" },
-            { icon: "⭐", title: "Completed Math Chapter 2 Quiz", date: "3 days ago", badge: "+10 Stars" },
-            { icon: "🔥", title: "Achieved 7-Day Daily Study Streak", date: "Active Now", badge: "On Fire" }
+            {
+                icon: "🏆",
+                title: isGu ? "ISL મૂળાક્ષરોના સંકેતો શીખ્યા" : "Mastered ISL Alphabet Signs",
+                date: isGu ? "ગઈકાલે, સાંજે ૪:૩૦" : "Yesterday, 4:30 PM",
+                badge: isGu ? "૧૦૦% સ્કોર" : "100% Score"
+            },
+            {
+                icon: "⭐",
+                title: isGu ? "ગણિત પ્રકરણ ૨ ક્વિઝ પૂર્ણ કરી" : "Completed Math Chapter 2 Quiz",
+                date: isGu ? "૩ દિવસ પહેલા" : "3 days ago",
+                badge: isGu ? "+૧૦ સ્ટાર્સ" : "+10 Stars"
+            },
+            {
+                icon: "🔥",
+                title: isGu ? "૭ દિવસ સતત અભ્યાસ પૂર્ણ કર્યો" : "Achieved 7-Day Daily Study Streak",
+                date: isGu ? "હાલમાં સક્રિય" : "Active Now",
+                badge: isGu ? "શ્રેષ્ઠ" : "On Fire"
+            }
         ],
-        teacherNote: "Aarav is excelling in Sign Language and Mathematics! He actively participates in practice modules. We recommend continuing 15 minutes of daily Science practice."
+        teacherNote: isGu
+            ? "આરવ સાંકેતિક ભાષા અને ગણિતમાં ખૂબ જ શ્રેષ્ઠ પ્રદર્શન કરી રહ્યો છે! તે નિયમિત પ્રેક્ટિસ કરે છે. અમે દરરોજ ૧૫ મિનિટ વિજ્ઞાનનો અભ્યાસ ચાલુ રાખવાની ભલામણ કરીએ છીએ."
+            : "Aarav is excelling in Sign Language and Mathematics! He actively participates in practice modules. We recommend continuing 15 minutes of daily Science practice."
     };
 
     modal.innerHTML = `
@@ -1036,7 +1124,7 @@ window.slOpenParentProgressModal = function () {
                     <div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
                         <h2 style="font-size:1.5rem; font-weight:900; color:var(--text-main); margin:0;">${mockData.childName}</h2>
                         <span style="background:#ECFDF5; color:#06D6A0; font-weight:800; font-size:0.8rem; padding:0.25rem 0.75rem; border-radius:50px; border:1px solid #A7F3D0;">
-                            Status: Excelling
+                            ${isGu ? "સ્થિતિ: ઉત્કૃષ્ટ" : "Status: Excelling"}
                         </span>
                     </div>
                     <p style="color:var(--text-muted); margin:0.2rem 0 0 0; font-size:0.88rem; font-weight:600;">
@@ -1048,36 +1136,36 @@ window.slOpenParentProgressModal = function () {
             <!-- Title & Subtitle -->
             <div style="margin-bottom:1.5rem;">
                 <h3 style="font-size:1.25rem; font-weight:800; color:var(--text-main); margin:0 0 0.3rem 0; display:flex; align-items:center; gap:0.5rem;">
-                    📊 Child Progress Summary
+                    📊 ${isGu ? "બાળકની પ્રગતિનો સારાંશ" : "Child Progress Summary"}
                 </h3>
                 <p style="color:var(--text-muted); font-size:0.9rem; margin:0; line-height:1.5;">
-                    Comprehensive overview of learning activity, subject mastery, and teacher feedback.
+                    ${isGu ? "શીખવાની પ્રવૃત્તિઓ, વિષયની નિપુણતા અને શિક્ષકના પ્રતિસાદની વ્યાપક સમીક્ષા." : "Comprehensive overview of learning activity, subject mastery, and teacher feedback."}
                 </p>
             </div>
 
             <!-- Stats Bar -->
             <div style="display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.8rem;">
                 <div class="sl-progress-stat-pill">
-                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Overall Progress</div>
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">${isGu ? "કુલ પ્રગતિ" : "Overall Progress"}</div>
                     <div style="font-size:1.35rem; font-weight:900; color:#06D6A0; margin-top:0.2rem;">${mockData.overallProgress}%</div>
                 </div>
                 <div class="sl-progress-stat-pill">
-                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Study Time</div>
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">${isGu ? "અભ્યાસ સમય" : "Study Time"}</div>
                     <div style="font-size:1.35rem; font-weight:900; color:#4A90E2; margin-top:0.2rem;">${mockData.totalTime}</div>
                 </div>
                 <div class="sl-progress-stat-pill">
-                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Quizzes Passed</div>
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">${isGu ? "પાસ થયેલી ક્વિઝ" : "Quizzes Passed"}</div>
                     <div style="font-size:1.35rem; font-weight:900; color:#8338EC; margin-top:0.2rem;">${mockData.quizzesPassed}</div>
                 </div>
                 <div class="sl-progress-stat-pill">
-                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">Stars & Streak</div>
+                    <div style="font-size:0.75rem; font-weight:700; color:var(--text-muted); text-transform:uppercase;">${isGu ? "સ્ટાર્સ અને સ્ટ્રીક" : "Stars & Streak"}</div>
                     <div style="font-size:1.35rem; font-weight:900; color:#FF9F1C; margin-top:0.2rem;">⭐ ${mockData.starsEarned} (${mockData.streakDays}d 🔥)</div>
                 </div>
             </div>
 
             <!-- Subject Progress List -->
             <div style="margin-bottom:1.8rem;">
-                <h4 style="font-size:1rem; font-weight:800; color:var(--text-main); margin:0 0 1rem 0;">Subject Performance Breakdown</h4>
+                <h4 style="font-size:1rem; font-weight:800; color:var(--text-main); margin:0 0 1rem 0;">${isGu ? "વિષયવાર પ્રગતિની વિગત" : "Subject Performance Breakdown"}</h4>
                 <div style="display:flex; flex-direction:column; gap:0.85rem;">
                     ${mockData.subjects.map(subj => `
                         <div style="background:#F8FAFC; border:1px solid #E2E8F0; padding:0.9rem 1.1rem; border-radius:16px;">
@@ -1098,7 +1186,7 @@ window.slOpenParentProgressModal = function () {
             <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap:1rem; margin-bottom:1.8rem;">
                 <div style="background:#FFF9EC; border:1px solid #FDE68A; border-radius:16px; padding:1.1rem;">
                     <h4 style="font-size:0.92rem; font-weight:800; color:#B45309; margin:0 0 0.8rem 0; display:flex; align-items:center; gap:0.4rem;">
-                        🏆 Recent Achievements
+                        🏆 ${isGu ? "તાજેતરની સિદ્ધિઓ" : "Recent Achievements"}
                     </h4>
                     <div style="display:flex; flex-direction:column; gap:0.5rem;">
                         ${mockData.recentMilestones.map(m => `
@@ -1115,7 +1203,7 @@ window.slOpenParentProgressModal = function () {
 
                 <div style="background:#F0F9FF; border:1px solid #BAE6FD; border-radius:16px; padding:1.1rem;">
                     <h4 style="font-size:0.92rem; font-weight:800; color:#0369A1; margin:0 0 0.5rem 0; display:flex; align-items:center; gap:0.4rem;">
-                        📝 Teacher's Remark (${mockData.teacherName})
+                        📝 ${isGu ? `શિક્ષકની નોંધ (${mockData.teacherName})` : `Teacher's Remark (${mockData.teacherName})`}
                     </h4>
                     <p style="font-size:0.83rem; color:#1E293B; line-height:1.5; margin:0; font-style:italic;">
                         "${mockData.teacherNote}"
@@ -1126,13 +1214,13 @@ window.slOpenParentProgressModal = function () {
             <!-- Footer Actions -->
             <div style="display:flex; gap:0.8rem; flex-wrap:wrap; border-top:1px solid #E2E8F0; padding-top:1.2rem;">
                 <button class="sl-btn sl-btn-primary" style="flex:1; justify-content:center; gap:0.5rem; font-size:0.9rem;" onclick="slExportChildPDF()">
-                    📄 Export PDF Report
+                    📄 ${isGu ? "PDF અહેવાલ ડાઉનલોડ કરો" : "Export PDF Report"}
                 </button>
-                <button class="sl-btn sl-btn-outline" style="flex:1; justify-content:center; gap:0.5rem; font-size:0.9rem;" onclick="slToast('Message sent to Mrs. Radhika Sharma!', 'success')">
-                    💬 Contact Teacher
+                <button class="sl-btn sl-btn-outline" style="flex:1; justify-content:center; gap:0.5rem; font-size:0.9rem;" onclick="slToast('${isGu ? "શ્રીમતી રાધિકા શર્માને સંદેશ મોકલવામાં આવ્યો છે!" : "Message sent to Mrs. Radhika Sharma!"}', 'success')">
+                    💬 ${isGu ? "શિક્ષકનો સંપર્ક કરો" : "Contact Teacher"}
                 </button>
                 <button class="sl-btn sl-btn-outline" style="justify-content:center; padding:0.8rem 1.2rem; font-size:0.9rem;" onclick="document.getElementById('slParentProgressModal').style.display='none'">
-                    Close
+                    ${isGu ? "બંધ કરો" : "Close"}
                 </button>
             </div>
         </div>
